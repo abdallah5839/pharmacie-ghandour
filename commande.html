@@ -92,24 +92,24 @@
                                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--spacing-md);">
                                     <div class="form-group">
                                         <label class="form-label required" for="nom">Nom</label>
-                                        <input type="text" id="nom" name="nom" class="form-input" required placeholder="Votre nom">
+                                        <input type="text" id="nom" name="nom" class="form-input" required placeholder="Votre nom" autocomplete="family-name">
                                     </div>
 
                                     <div class="form-group">
                                         <label class="form-label required" for="prenom">Prénom</label>
-                                        <input type="text" id="prenom" name="prenom" class="form-input" required placeholder="Votre prénom">
+                                        <input type="text" id="prenom" name="prenom" class="form-input" required placeholder="Votre prénom" autocomplete="given-name">
                                     </div>
                                 </div>
 
                                 <div class="form-group">
                                     <label class="form-label required" for="telephone">Téléphone</label>
-                                    <input type="tel" id="telephone" name="telephone" class="form-input" required placeholder="77 123 45 67">
+                                    <input type="tel" id="telephone" name="telephone" class="form-input" required placeholder="77 123 45 67" inputmode="tel" autocomplete="tel">
                                     <div class="form-hint">Format Sénégal: 77 XXX XX XX</div>
                                 </div>
 
                                 <div class="form-group">
                                     <label class="form-label required" for="email">Email</label>
-                                    <input type="email" id="email" name="email" class="form-input" required placeholder="votre@email.com">
+                                    <input type="email" id="email" name="email" class="form-input" required placeholder="votre@email.com" inputmode="email" autocomplete="email">
                                     <div class="form-hint">Vous recevrez la confirmation de commande par email</div>
                                 </div>
                             </div>
@@ -246,5 +246,36 @@
             }
         }
     </style>
+
+    <!-- Bottom Navigation Mobile -->
+    <nav class="bottom-nav" id="bottom-nav">
+        <ul class="bottom-nav-list">
+            <li>
+                <a href="index.html" class="bottom-nav-item" data-page="index">
+                    <span class="bottom-nav-icon">🏠</span>
+                    <span class="bottom-nav-label">Accueil</span>
+                </a>
+            </li>
+            <li>
+                <a href="categorie.html" class="bottom-nav-item" data-page="categorie">
+                    <span class="bottom-nav-icon">📦</span>
+                    <span class="bottom-nav-label">Produits</span>
+                </a>
+            </li>
+            <li>
+                <a href="panier.html" class="bottom-nav-item active" data-page="panier">
+                    <span class="bottom-nav-icon">🛒</span>
+                    <span class="bottom-nav-label">Panier</span>
+                    <span class="nav-badge hidden" id="bottom-cart-count">0</span>
+                </a>
+            </li>
+            <li>
+                <a href="contact.html" class="bottom-nav-item" data-page="contact">
+                    <span class="bottom-nav-icon">📍</span>
+                    <span class="bottom-nav-label">Contact</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
 </body>
 </html>

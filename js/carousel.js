@@ -6,8 +6,14 @@
 const CAROUSEL_CONFIG = {
     autoScrollDelay: 4000,  // Délai entre chaque scroll automatique (ms)
     itemsPerView: 4,        // Nombre d'items visibles (desktop)
-    transitionDuration: 500  // Durée de la transition (ms)
+    transitionDuration: 500, // Durée de la transition (ms)
+    mobileBreakpoint: 480   // Seuil pour le mode mobile
 };
+
+// Détecter si on est sur mobile
+function isMobileView() {
+    return window.innerWidth <= CAROUSEL_CONFIG.mobileBreakpoint;
+}
 
 // Initialisation au chargement
 document.addEventListener('DOMContentLoaded', function() {
@@ -181,10 +187,21 @@ function initCarousel(carouselId, products) {
     function updateCarousel() {
         const cards = track.querySelectorAll('.product-card');
         const cardWidth = cards[0]?.offsetWidth || 250;
-        const gap = 24; // var(--spacing-lg)
-        const offset = state.currentIndex * (cardWidth + gap);
+        const gap = isMobileView() ? 16 : 24; // var(--spacing-md) ou var(--spacing-lg)
 
-        track.style.transform = `translateX(-${offset}px)`;
+        if (isMobileView()) {
+            // Sur mobile: utiliser le scroll natif
+            const container = carousel.querySelector('.carousel-container');
+            const scrollPosition = state.currentIndex * (cardWidth + gap);
+            container.scrollTo({
+                left: scrollPosition,
+                behavior: 'smooth'
+            });
+        } else {
+            // Sur desktop: utiliser transform
+            const offset = state.currentIndex * (cardWidth + gap);
+            track.style.transform = `translateX(-${offset}px)`;
+        }
 
         // Mettre à jour les boutons
         prevBtn.disabled = state.currentIndex === 0;
@@ -195,6 +212,30 @@ function initCarousel(carouselId, products) {
         indicatorsContainer.querySelectorAll('.carousel-indicator').forEach((ind, i) => {
             ind.classList.toggle('active', i === activeIndicatorIndex);
         });
+    }
+
+    // Observer le scroll natif sur mobile pour mettre à jour les indicateurs
+    if (isMobileView()) {
+        const container = carousel.querySelector('.carousel-container');
+        let scrollTimeout;
+        container.addEventListener('scroll', () => {
+            clearTimeout(scrollTimeout);
+            scrollTimeout = setTimeout(() => {
+                const cards = track.querySelectorAll('.product-card');
+                const cardWidth = cards[0]?.offsetWidth || 250;
+                const gap = 16;
+                const scrollLeft = container.scrollLeft;
+                const newIndex = Math.round(scrollLeft / (cardWidth + gap));
+                if (newIndex !== state.currentIndex) {
+                    state.currentIndex = newIndex;
+                    // Mettre à jour les indicateurs
+                    const activeIndicatorIndex = Math.floor(state.currentIndex / state.itemsPerView);
+                    indicatorsContainer.querySelectorAll('.carousel-indicator').forEach((ind, i) => {
+                        ind.classList.toggle('active', i === activeIndicatorIndex);
+                    });
+                }
+            }, 100);
+        }, { passive: true });
     }
 
     // Navigation précédent
@@ -215,8 +256,11 @@ function initCarousel(carouselId, products) {
         }
     });
 
-    // Auto-scroll
+    // Auto-scroll (désactivé sur mobile pour laisser l'utilisateur swiper)
     function startAutoScroll() {
+        // Pas d'auto-scroll sur mobile
+        if (isMobileView()) return;
+
         if (state.autoScrollInterval) clearInterval(state.autoScrollInterval);
 
         state.autoScrollInterval = setInterval(() => {

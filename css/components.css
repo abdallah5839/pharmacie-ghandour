@@ -17,6 +17,9 @@
     cursor: pointer;
     transition: all var(--transition-fast);
     text-decoration: none;
+    /* Touch target minimum 44px */
+    min-height: 44px;
+    min-width: 44px;
 }
 
 .btn-primary {
@@ -539,8 +542,10 @@
 }
 
 .quantity-btn {
-    width: 40px;
-    height: 40px;
+    width: 44px;
+    height: 44px;
+    min-width: 44px;
+    min-height: 44px;
     background: var(--off-white);
     border: none;
     font-size: 1.25rem;
@@ -1063,4 +1068,146 @@
 
 .similar-products h2 {
     margin-bottom: var(--spacing-lg);
+}
+
+/* ============================================
+   Bottom Navigation Bar (Mobile)
+   ============================================ */
+.bottom-nav {
+    display: none;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: var(--white);
+    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+    padding: var(--spacing-sm) 0;
+    padding-bottom: calc(var(--spacing-sm) + env(safe-area-inset-bottom, 0));
+}
+
+.bottom-nav-list {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.bottom-nav-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    color: var(--text-gray);
+    padding: var(--spacing-xs) var(--spacing-sm);
+    min-width: 64px;
+    min-height: 48px;
+    border-radius: var(--radius-md);
+    transition: all var(--transition-fast);
+    position: relative;
+}
+
+.bottom-nav-item:hover,
+.bottom-nav-item:active {
+    color: var(--primary-green);
+    background: rgba(46, 125, 50, 0.08);
+}
+
+.bottom-nav-item.active {
+    color: var(--primary-green);
+}
+
+.bottom-nav-icon {
+    font-size: 1.4rem;
+    line-height: 1;
+    margin-bottom: 2px;
+}
+
+.bottom-nav-label {
+    font-size: 0.65rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+}
+
+/* Badge panier dans bottom nav */
+.bottom-nav-item .nav-badge {
+    position: absolute;
+    top: 2px;
+    right: 12px;
+    background: var(--primary-green);
+    color: var(--white);
+    font-size: 0.6rem;
+    font-weight: 700;
+    min-width: 16px;
+    height: 16px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 4px;
+}
+
+.bottom-nav-item .nav-badge.hidden {
+    display: none;
+}
+
+/* Afficher la bottom nav uniquement sur mobile */
+@media (max-width: 768px) {
+    .bottom-nav {
+        display: block;
+    }
+
+    /* Ajouter du padding en bas du body pour éviter que le contenu soit caché */
+    body {
+        padding-bottom: 70px;
+    }
+
+    /* Cacher la recherche du header sur mobile (sera dans bottom nav) */
+    .header .search-bar {
+        display: none;
+    }
+}
+
+/* ============================================
+   Sticky Add to Cart (Page Produit Mobile)
+   ============================================ */
+.sticky-add-to-cart {
+    display: none;
+    position: fixed;
+    bottom: 70px; /* Au-dessus de la bottom nav */
+    left: 0;
+    right: 0;
+    background: var(--white);
+    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+    padding: var(--spacing-md);
+    z-index: 999;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--spacing-md);
+}
+
+.sticky-add-to-cart .sticky-price {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--primary-green);
+}
+
+.sticky-add-to-cart .btn {
+    flex: 1;
+    max-width: 200px;
+}
+
+@media (max-width: 768px) {
+    .sticky-add-to-cart {
+        display: flex;
+    }
+
+    /* Ajuster le padding du body si sticky est présent */
+    body.has-sticky-cart {
+        padding-bottom: 140px;
+    }
 }
