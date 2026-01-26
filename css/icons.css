@@ -1,0 +1,236 @@
+/* ============================================
+   PHARMACIE GHANDOUR - Icônes SVG (Lucide-based)
+   ============================================ */
+
+/* Variables pour les icônes */
+:root {
+    --icon-size-sm: 16px;
+    --icon-size-md: 20px;
+    --icon-size-lg: 24px;
+    --icon-size-xl: 32px;
+    --icon-size-2xl: 48px;
+    --icon-stroke-width: 2;
+}
+
+/* Classe de base pour les icônes */
+.icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: var(--icon-size-md);
+    height: var(--icon-size-md);
+    vertical-align: middle;
+    flex-shrink: 0;
+}
+
+.icon svg {
+    width: 100%;
+    height: 100%;
+    stroke: currentColor;
+    stroke-width: var(--icon-stroke-width);
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    fill: none;
+}
+
+/* Tailles d'icônes */
+.icon-sm {
+    width: var(--icon-size-sm);
+    height: var(--icon-size-sm);
+}
+
+.icon-md {
+    width: var(--icon-size-md);
+    height: var(--icon-size-md);
+}
+
+.icon-lg {
+    width: var(--icon-size-lg);
+    height: var(--icon-size-lg);
+}
+
+.icon-xl {
+    width: var(--icon-size-xl);
+    height: var(--icon-size-xl);
+}
+
+.icon-2xl {
+    width: var(--icon-size-2xl);
+    height: var(--icon-size-2xl);
+}
+
+/* Icône du logo */
+.logo-icon {
+    width: 40px;
+    height: 40px;
+    background: var(--primary-green);
+    border-radius: var(--radius-md);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+}
+
+.logo-icon .icon {
+    width: 24px;
+    height: 24px;
+}
+
+/* Icônes de la barre de recherche */
+.search-bar button .icon {
+    width: 18px;
+    height: 18px;
+    color: var(--text-gray);
+}
+
+/* Icône du panier header */
+.cart-icon .icon {
+    width: 24px;
+    height: 24px;
+}
+
+/* Icônes de section (titres des carrousels) */
+.section-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    margin-right: var(--spacing-sm);
+    color: var(--primary-green);
+}
+
+.section-icon .icon {
+    width: 28px;
+    height: 28px;
+}
+
+/* Icônes des avantages/catégories */
+.category-icon {
+    width: 64px;
+    height: 64px;
+    background: var(--primary-green-light);
+    background: linear-gradient(135deg, var(--primary-green), var(--primary-green-light));
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto var(--spacing-md);
+    color: white;
+}
+
+.category-icon .icon {
+    width: 32px;
+    height: 32px;
+}
+
+/* Icônes de la navigation bottom */
+.bottom-nav-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: inherit;
+}
+
+.bottom-nav-icon .icon {
+    width: 24px;
+    height: 24px;
+}
+
+/* Icônes de contact */
+.contact-info-icon {
+    width: 48px;
+    height: 48px;
+    background: var(--off-white);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--primary-green);
+    flex-shrink: 0;
+}
+
+.contact-info-icon .icon {
+    width: 24px;
+    height: 24px;
+}
+
+/* Icône dans les boutons */
+.btn .icon {
+    width: 18px;
+    height: 18px;
+    margin-right: var(--spacing-xs);
+}
+
+.btn-sm .icon {
+    width: 16px;
+    height: 16px;
+}
+
+/* Icône de confirmation */
+.confirmation-icon {
+    width: 80px;
+    height: 80px;
+    background: var(--primary-green);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto var(--spacing-lg);
+    color: white;
+}
+
+.confirmation-icon .icon {
+    width: 40px;
+    height: 40px;
+}
+
+/* Icône empty state */
+.empty-state-icon {
+    width: 80px;
+    height: 80px;
+    background: var(--off-white);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto var(--spacing-md);
+    color: var(--text-gray);
+}
+
+.empty-state-icon .icon {
+    width: 40px;
+    height: 40px;
+}
+
+/* Badge de stock */
+.stock-badge .icon {
+    width: 16px;
+    height: 16px;
+    margin-right: 4px;
+}
+
+/* Dropdown arrow */
+.nav-dropdown-arrow {
+    display: inline-flex;
+    align-items: center;
+    margin-left: 4px;
+    transition: transform 0.2s ease;
+}
+
+.nav-dropdown-arrow .icon {
+    width: 14px;
+    height: 14px;
+}
+
+.nav-dropdown.active .nav-dropdown-arrow {
+    transform: rotate(180deg);
+}
+
+/* Menu dropdown icônes */
+.nav-dropdown-menu a .icon {
+    width: 18px;
+    height: 18px;
+    margin-right: var(--spacing-sm);
+    color: var(--primary-green);
+}

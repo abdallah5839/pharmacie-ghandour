@@ -14,20 +14,23 @@
     <!-- Styles -->
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="css/icons.css">
     <link rel="stylesheet" href="css/responsive.css">
 
     <!-- EmailJS SDK -->
     <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
 
     <!-- Favicon -->
-    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💊</text></svg>">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%232E7D32' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='m10.5 20.5 10-10a4.95 4.95 0 1 0-7-7l-10 10a4.95 4.95 0 1 0 7 7Z'/><path d='m8.5 8.5 7 7'/></svg>">
 </head>
 <body>
     <!-- Header -->
     <header class="header">
         <div class="header-container">
             <a href="index.html" class="logo">
-                <div class="logo-icon">💊</div>
+                <div class="logo-icon">
+                    <span class="icon"><svg viewBox="0 0 24 24"><path d="m10.5 20.5 10-10a4.95 4.95 0 1 0-7-7l-10 10a4.95 4.95 0 1 0 7 7Z"/><path d="m8.5 8.5 7 7"/></svg></span>
+                </div>
                 <span>Pharmacie Ghandour</span>
             </a>
 
@@ -37,7 +40,7 @@
                     <li class="nav-dropdown">
                         <button class="nav-dropdown-toggle">
                             Produits
-                            <span class="nav-dropdown-arrow">▼</span>
+                            <span class="nav-dropdown-arrow"><span class="icon"><svg viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></svg></span></span>
                         </button>
                         <div class="nav-dropdown-menu" id="categories-dropdown">
                             <!-- Chargé dynamiquement -->
@@ -49,12 +52,14 @@
 
             <div class="search-bar">
                 <input type="text" placeholder="Rechercher un produit..." aria-label="Rechercher">
-                <button type="button" aria-label="Rechercher">🔍</button>
+                <button type="button" aria-label="Rechercher">
+                    <span class="icon"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg></span>
+                </button>
                 <div class="search-suggestions"></div>
             </div>
 
             <a href="panier.html" class="cart-icon" aria-label="Panier">
-                🛒
+                <span class="icon"><svg viewBox="0 0 24 24"><circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/></svg></span>
                 <span class="cart-count hidden">0</span>
             </a>
 
@@ -88,23 +93,29 @@
                     <!-- Informations de contact -->
                     <div>
                         <div class="contact-info-card">
-                            <div class="contact-info-icon">📍</div>
+                            <div class="contact-info-icon">
+                                <span class="icon icon-lg"><svg viewBox="0 0 24 24"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg></span>
+                            </div>
                             <div class="contact-info-text">
                                 <h4>Adresse</h4>
-                                <p>Avenue Cheikh Anta Diop<br>Dakar, Sénégal</p>
+                                <p>Rue Huart<br>Dakar, Sénégal</p>
                             </div>
                         </div>
 
                         <div class="contact-info-card">
-                            <div class="contact-info-icon">📞</div>
+                            <div class="contact-info-icon">
+                                <span class="icon icon-lg"><svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg></span>
+                            </div>
                             <div class="contact-info-text">
                                 <h4>Téléphone</h4>
-                                <p>+221 33 XXX XX XX</p>
+                                <p><a href="tel:+221338216820">+221 33 821 68 20</a></p>
                             </div>
                         </div>
 
                         <div class="contact-info-card">
-                            <div class="contact-info-icon">✉️</div>
+                            <div class="contact-info-icon">
+                                <span class="icon icon-lg"><svg viewBox="0 0 24 24"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg></span>
+                            </div>
                             <div class="contact-info-text">
                                 <h4>Email</h4>
                                 <p>contact@pharmacieghandour.sn</p>
@@ -112,27 +123,30 @@
                         </div>
 
                         <div class="contact-info-card">
-                            <div class="contact-info-icon">🕐</div>
+                            <div class="contact-info-icon">
+                                <span class="icon icon-lg"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></span>
+                            </div>
                             <div class="contact-info-text">
                                 <h4>Horaires d'ouverture</h4>
                                 <p>
-                                    Lundi - Samedi: 8h - 22h<br>
-                                    Dimanche: 9h - 13h
+                                    Lundi - Vendredi: 08:30 - 19:30<br>
+                                    Samedi: 08:30 - 13:00<br>
+                                    Dimanche: Fermé
                                 </p>
                             </div>
                         </div>
 
-                        <!-- Carte Google Maps -->
+                        <!-- Carte Google Maps - Pharmacie Ghandour, Rue Huart, Dakar -->
                         <div class="map-container">
                             <iframe
-                                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3858.8889!2d-17.4676!3d14.6937!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMTTCsDQxJzM3LjMiTiAxN8KwMjgnMDMuNCJX!5e0!3m2!1sfr!2ssn!4v1234567890"
+                                src="https://www.google.com/maps/embed?pb=!1m17!1m12!1m3!1d500!2d-17.430000!3d14.668993!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m2!1m1!2zMTTCsDQwJzA4LjQiTiAxN8KwMjUnNDguMCJX!5e0!3m2!1sfr!2ssn!4v1706300000000"
                                 width="100%"
                                 height="100%"
                                 style="border:0;"
                                 allowfullscreen=""
                                 loading="lazy"
                                 referrerpolicy="no-referrer-when-downgrade"
-                                title="Localisation Pharmacie Ghandour">
+                                title="Localisation Pharmacie Ghandour - Rue Huart, Dakar">
                             </iframe>
                         </div>
                     </div>
@@ -176,7 +190,7 @@
                                 </div>
 
                                 <button type="submit" class="btn btn-primary btn-lg btn-block">
-                                    ✉️ Envoyer le message
+                                    <span class="icon icon-sm"><svg viewBox="0 0 24 24"><path d="m22 2-7 20-4-9-9-4Z"/><path d="M22 2 11 13"/></svg></span> Envoyer le message
                                 </button>
                             </form>
                         </div>
@@ -244,15 +258,15 @@
                 </div>
                 <div class="footer-col">
                     <h4>Contact</h4>
-                    <p>Avenue Cheikh Anta Diop<br>Dakar, Sénégal</p>
-                    <p>Tél: +221 33 XXX XX XX</p>
+                    <p>Rue Huart<br>Dakar, Sénégal</p>
+                    <p>Tél: +221 33 821 68 20</p>
                     <p>Email: contact@pharmacieghandour.sn</p>
                 </div>
                 <div class="footer-col">
                     <h4>Horaires d'ouverture</h4>
-                    <p>Lundi - Samedi: 8h - 22h</p>
-                    <p>Dimanche: 9h - 13h</p>
-                    <p style="color: var(--accent); margin-top: 10px;">Service de garde disponible</p>
+                    <p>Lun - Ven: 08:30 - 19:30</p>
+                    <p>Samedi: 08:30 - 13:00</p>
+                    <p>Dimanche: Fermé</p>
                 </div>
             </div>
             <div class="footer-bottom">
@@ -262,6 +276,7 @@
     </footer>
 
     <!-- Scripts -->
+    <script src="js/icons.js"></script>
     <script src="js/main.js"></script>
     <script src="js/email.js"></script>
     <script src="js/carousel.js"></script>
@@ -273,7 +288,7 @@
 
             const form = this;
             const submitBtn = form.querySelector('button[type="submit"]');
-            const originalText = submitBtn.textContent;
+            const originalText = submitBtn.innerHTML;
 
             submitBtn.disabled = true;
             submitBtn.textContent = 'Envoi en cours...';
@@ -290,9 +305,40 @@
                 window.PharmacieApp.showToast('Erreur lors de l\'envoi. Veuillez réessayer.', 'error');
             } finally {
                 submitBtn.disabled = false;
-                submitBtn.textContent = originalText;
+                submitBtn.innerHTML = originalText;
             }
         });
     </script>
+
+    <!-- Bottom Navigation Mobile -->
+    <nav class="bottom-nav" id="bottom-nav">
+        <ul class="bottom-nav-list">
+            <li>
+                <a href="index.html" class="bottom-nav-item" data-page="index">
+                    <span class="bottom-nav-icon"><span class="icon"><svg viewBox="0 0 24 24"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></span></span>
+                    <span class="bottom-nav-label">Accueil</span>
+                </a>
+            </li>
+            <li>
+                <a href="categorie.html" class="bottom-nav-item" data-page="categorie">
+                    <span class="bottom-nav-icon"><span class="icon"><svg viewBox="0 0 24 24"><path d="m7.5 4.27 9 5.15"/><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/><path d="m3.3 7 8.7 5 8.7-5"/><path d="M12 22V12"/></svg></span></span>
+                    <span class="bottom-nav-label">Produits</span>
+                </a>
+            </li>
+            <li>
+                <a href="panier.html" class="bottom-nav-item" data-page="panier">
+                    <span class="bottom-nav-icon"><span class="icon"><svg viewBox="0 0 24 24"><circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/></svg></span></span>
+                    <span class="bottom-nav-label">Panier</span>
+                    <span class="nav-badge hidden" id="bottom-cart-count">0</span>
+                </a>
+            </li>
+            <li>
+                <a href="contact.html" class="bottom-nav-item active" data-page="contact">
+                    <span class="bottom-nav-icon"><span class="icon"><svg viewBox="0 0 24 24"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg></span></span>
+                    <span class="bottom-nav-label">Contact</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
 </body>
 </html>

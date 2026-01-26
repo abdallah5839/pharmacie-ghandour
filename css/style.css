@@ -59,6 +59,7 @@
 
 html {
     scroll-behavior: smooth;
+    overflow-x: hidden;
 }
 
 body {
@@ -70,6 +71,8 @@ body {
     min-height: 100vh;
     display: flex;
     flex-direction: column;
+    overflow-x: hidden;
+    padding-top: 70px; /* Espace pour le header fixe */
 }
 
 main {
@@ -127,8 +130,11 @@ ul, ol {
 .header {
     background: var(--white);
     box-shadow: var(--shadow-sm);
-    position: sticky;
+    position: fixed;
     top: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
     z-index: 1000;
 }
 
