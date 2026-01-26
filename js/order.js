@@ -292,6 +292,9 @@ async function submitOrder(form) {
         const emailSent = await sendOrderEmails(orderData);
 
         if (emailSent) {
+            // Enregistrer la commande dans Sanity (en arrière-plan, non bloquant)
+            saveOrderToSanity(orderData);
+
             // Sauvegarder la commande pour la page de confirmation
             sessionStorage.setItem('lastOrder', JSON.stringify(orderData));
 
@@ -331,6 +334,51 @@ function getOrderItems() {
 function getOrderTotal() {
     const items = getOrderItems();
     return items.reduce((sum, item) => sum + item.subtotal, 0);
+}
+
+/* ============================================
+   Enregistrement dans Sanity CMS
+   ============================================ */
+async function saveOrderToSanity(orderData) {
+    // Ne pas bloquer si Sanity n'est pas disponible
+    if (!window.SanityClient) {
+        console.log('SanityClient non disponible - commande non enregistrée dans CMS');
+        return;
+    }
+
+    try {
+        // Formater les données pour Sanity
+        const [date, hour] = orderData.pickupTime ? orderData.pickupTime.split('_') : [null, null];
+
+        const sanityOrderData = {
+            numeroCommande: orderData.orderNumber,
+            client: {
+                nom: `${orderData.customer.prenom} ${orderData.customer.nom}`,
+                telephone: orderData.customer.telephone,
+                email: orderData.customer.email
+            },
+            produits: orderData.items.map(item => ({
+                id: item.id,
+                sanityId: item.id.startsWith('product-') ? item.id : null,
+                nom: item.nom,
+                quantite: item.quantity,
+                prix: item.prix
+            })),
+            total: orderData.total,
+            dateRetrait: date || null,
+            heureRetrait: hour ? (hour < 12 ? 'matin' : (hour < 18 ? 'apres-midi' : 'soir')) : null,
+            commentaires: orderData.customer.notes || ''
+        };
+
+        const result = await window.SanityClient.createOrder(sanityOrderData);
+
+        if (result.success) {
+            console.log('✅ Commande enregistrée dans Sanity CMS');
+        }
+    } catch (error) {
+        // Log mais ne pas bloquer - l'email a déjà été envoyé
+        console.warn('Erreur enregistrement Sanity (non bloquant):', error);
+    }
 }
 
 /* ============================================

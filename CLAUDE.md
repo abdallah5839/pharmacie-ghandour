@@ -40,6 +40,7 @@ All JS files use the global `window.PharmacieApp` object for shared utilities:
 | `js/order.js` | Order form validation, submission, confirmation page. Exports `OrderManager`. |
 | `js/email.js` | EmailJS configuration for sending order notifications. Exports `EmailConfig`. |
 | `js/carousel.js` | Homepage product carousels and category dropdown menu. |
+| `js/sanity.js` | Sanity CMS client - fetches data from Sanity API with fallback to local JSON. Exposes `SanityClient` global. |
 
 ### CSS Structure
 - `css/style.css` - Global styles, CSS variables, header, footer, typography
@@ -47,7 +48,15 @@ All JS files use the global `window.PharmacieApp` object for shared utilities:
 - `css/responsive.css` - Mobile breakpoints and responsive adjustments
 
 ### Data
-- `data/products.json` - All product data and category definitions (static JSON, future Notion CMS integration planned)
+- `data/products.json` - Fallback product data (static JSON)
+- Sanity CMS - Primary data source for products, categories, and orders
+
+### Sanity CMS Integration
+- **Project ID**: `ir1xi4z1`
+- **Dataset**: `production`
+- **Studio**: `sanity-studio/` folder (run with `npm run dev`)
+- Data is fetched from Sanity API, with automatic fallback to `data/products.json` if Sanity is unavailable
+- Orders are saved to Sanity CMS for tracking in the admin dashboard
 
 ## Key Conventions
 
