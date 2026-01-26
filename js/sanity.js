@@ -28,6 +28,9 @@
         return url;
     };
 
+    // Image par défaut (placeholder)
+    const DEFAULT_IMAGE = 'https://placehold.co/300x300/2E7D32/white?text=Pharmacie+Ghandour';
+
     // URL pour les images Sanity
     const getImageUrl = (imageRef, options = {}) => {
         if (!imageRef || !imageRef.asset) return null;
@@ -36,29 +39,31 @@
         if (!ref) return null;
 
         // Parse la référence: image-{id}-{dimensions}-{format}
-        const [, id, dimensions, format] = ref.split('-');
-        const [width, height] = dimensions.split('x');
+        const parts = ref.split('-');
+        if (parts.length < 4) return null;
+
+        // Le format est "image-{id}-{dimensions}-{format}"
+        const id = parts[1];
+        const dimensions = parts[2];
+        const format = parts[3];
 
         let url = `https://cdn.sanity.io/images/${SANITY_CONFIG.projectId}/${SANITY_CONFIG.dataset}/${id}-${dimensions}.${format}`;
 
-        // Options d'optimisation
-        const params = [];
+        // Options d'optimisation - toujours ajouter auto=format pour conversion automatique
+        const params = ['auto=format']; // Convertit heif, webp, etc. vers format supporté par le navigateur
         if (options.width) params.push(`w=${options.width}`);
         if (options.height) params.push(`h=${options.height}`);
-        if (options.quality) params.push(`q=${options.quality}`);
+        if (options.quality) params.push(`q=${options.quality || 80}`);
         if (options.fit) params.push(`fit=${options.fit}`);
-        if (options.auto) params.push(`auto=${options.auto}`);
 
-        if (params.length > 0) {
-            url += '?' + params.join('&');
-        }
+        url += '?' + params.join('&');
 
         return url;
     };
 
     // Cache simple pour les requêtes
     const cache = new Map();
-    const CACHE_DURATION = 5 * 60 * 1000; // 5 minutes
+    const CACHE_DURATION = 1 * 60 * 1000; // 1 minute (réduit pour dev)
 
     const getCached = (key) => {
         const cached = cache.get(key);
@@ -388,6 +393,15 @@
     const transformProduct = (sanityProduct) => {
         if (!sanityProduct) return null;
 
+        // Générer les URLs d'images avec fallback
+        const imageUrl = sanityProduct.image ? getImageUrl(sanityProduct.image, { width: 300, quality: 80 }) : null;
+        const imageFullUrl = sanityProduct.image ? getImageUrl(sanityProduct.image, { width: 600, quality: 90 }) : null;
+
+        // Debug: log si l'image est présente
+        if (sanityProduct.image) {
+            console.log(`🖼️ Image trouvée pour "${sanityProduct.nom}":`, imageUrl);
+        }
+
         return {
             id: sanityProduct.id || sanityProduct._id,
             nom: sanityProduct.nom,
@@ -396,9 +410,9 @@
             marque: sanityProduct.marque || '',
             reference: sanityProduct.reference || '',
             prix: sanityProduct.prix,
-            image: sanityProduct.image ? getImageUrl(sanityProduct.image, { width: 300, quality: 80 }) : null,
-            imageFull: sanityProduct.image ? getImageUrl(sanityProduct.image, { width: 600, quality: 90 }) : null,
-            galerie: sanityProduct.galerie ? sanityProduct.galerie.map(img => getImageUrl(img, { width: 600, quality: 90 })) : [],
+            image: imageUrl || DEFAULT_IMAGE,
+            imageFull: imageFullUrl || DEFAULT_IMAGE,
+            galerie: sanityProduct.galerie ? sanityProduct.galerie.map(img => getImageUrl(img, { width: 600, quality: 90 })).filter(Boolean) : [],
             description: sanityProduct.description || '',
             composition: sanityProduct.composition || '',
             posologie: sanityProduct.posologie || '',
@@ -431,6 +445,20 @@
      */
     const clearCache = () => {
         cache.clear();
+        console.log('🗑️ Cache Sanity vidé');
+    };
+
+    /**
+     * Force le rechargement des données depuis Sanity (vide le cache et recharge)
+     */
+    const forceRefresh = async () => {
+        clearCache();
+        console.log('🔄 Rechargement forcé des données Sanity...');
+        // Retourne les nouvelles données
+        return {
+            products: await getProducts(),
+            categories: await getCategories()
+        };
     };
 
     // ==========================================
@@ -461,7 +489,9 @@
         getImageUrl,
         transformProduct,
         transformCategory,
-        clearCache
+        clearCache,
+        forceRefresh,
+        DEFAULT_IMAGE
     };
 
     console.log('✅ SanityClient initialisé - Project ID:', SANITY_CONFIG.projectId);
