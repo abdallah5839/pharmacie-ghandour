@@ -644,8 +644,21 @@ function displayProductNotFound() {
    Ajout au panier (utilisé ici et importé par cart.js)
    ============================================ */
 function addToCart(productId, quantity = 1) {
+    console.log('🛒 addToCart appelé avec ID:', productId);
+
     const product = window.PharmacieApp.getProductById(productId);
-    if (!product || !product.enStock) return;
+    console.log('🛒 Produit trouvé:', product);
+
+    if (!product) {
+        console.error('❌ Produit non trouvé avec ID:', productId);
+        console.log('📦 Produits disponibles:', window.PharmacieApp.getProducts().map(p => p.id));
+        return;
+    }
+
+    if (!product.enStock) {
+        console.warn('⚠️ Produit en rupture de stock');
+        return;
+    }
 
     const cart = window.PharmacieApp.getCart();
     const existingItem = cart.find(item => item.id === productId);

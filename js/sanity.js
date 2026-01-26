@@ -82,7 +82,10 @@
         // Vérifier le cache
         if (cacheKey) {
             const cached = getCached(cacheKey);
-            if (cached) return cached;
+            if (cached) {
+                console.log(`📦 Cache hit: ${cacheKey}`);
+                return cached;
+            }
         }
 
         try {
@@ -94,6 +97,12 @@
             }
 
             const data = await response.json();
+
+            // DEBUG: Log des données brutes
+            console.log(`🔄 Sanity API (${cacheKey || 'no-cache'}):`, data.result?.length || 0, 'éléments');
+            if (data.result && data.result[0]) {
+                console.log('🔍 Premier élément brut:', data.result[0]);
+            }
 
             // Mettre en cache
             if (cacheKey && data.result) {
@@ -393,14 +402,20 @@
     const transformProduct = (sanityProduct) => {
         if (!sanityProduct) return null;
 
+        // DEBUG: Afficher les données brutes avant transformation
+        console.log('🔧 transformProduct - données brutes:', {
+            id: sanityProduct.id || sanityProduct._id,
+            nom: sanityProduct.nom,
+            prix: sanityProduct.prix,
+            image: sanityProduct.image ? 'présente' : 'absente'
+        });
+
         // Générer les URLs d'images avec fallback
         const imageUrl = sanityProduct.image ? getImageUrl(sanityProduct.image, { width: 300, quality: 80 }) : null;
         const imageFullUrl = sanityProduct.image ? getImageUrl(sanityProduct.image, { width: 600, quality: 90 }) : null;
 
-        // Debug: log si l'image est présente
-        if (sanityProduct.image) {
-            console.log(`🖼️ Image trouvée pour "${sanityProduct.nom}":`, imageUrl);
-        }
+        // Debug: log de l'URL de l'image
+        console.log(`🖼️ Image pour "${sanityProduct.nom}":`, imageUrl || 'fallback vers DEFAULT_IMAGE');
 
         return {
             id: sanityProduct.id || sanityProduct._id,
@@ -494,6 +509,8 @@
         DEFAULT_IMAGE
     };
 
+    // Vider le cache au chargement pour le développement
+    clearCache();
     console.log('✅ SanityClient initialisé - Project ID:', SANITY_CONFIG.projectId);
 
 })();

@@ -259,7 +259,11 @@ async function loadProducts() {
                 AppState.categories = sanityCategories.map(c => window.SanityClient.transformCategory(c));
                 AppState.dataSource = 'sanity';
 
+                // DEBUG: Afficher les données chargées
                 console.log('✅ Données chargées depuis Sanity CMS');
+                console.log('📦 Produits:', AppState.products.length);
+                console.log('📁 Catégories:', AppState.categories.length);
+                console.log('🔍 Premier produit:', AppState.products[0]);
 
                 document.dispatchEvent(new CustomEvent('productsLoaded', {
                     detail: {
@@ -331,6 +335,11 @@ function getPopularProducts() {
    Utilitaires
    ============================================ */
 function formatPrice(price) {
+    // Gestion des prix invalides
+    if (price === null || price === undefined || isNaN(price)) {
+        console.warn('⚠️ Prix invalide:', price);
+        return '-- ' + CONFIG.currency;
+    }
     return new Intl.NumberFormat('fr-FR').format(price) + ' ' + CONFIG.currency;
 }
 
