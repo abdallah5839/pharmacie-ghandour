@@ -54,7 +54,7 @@ function displayCategories() {
 
     container.innerHTML = categories.map(cat => `
         <a href="categorie.html?cat=${cat.id}" class="category-card">
-            <div class="category-icon">${cat.icon}</div>
+            <div class="category-icon"><span class="icon icon-lg">${window.PharmacieIcons.getCategoryIcon(cat.id)}</span></div>
             <h3>${window.PharmacieApp.escapeHtml(cat.nom)}</h3>
             <p>${cat.count} produits</p>
         </a>
@@ -367,7 +367,7 @@ function displayProducts(products) {
     if (products.length === 0) {
         container.innerHTML = `
             <div class="empty-state">
-                <div class="empty-state-icon">🔍</div>
+                <div class="empty-state-icon"><span class="icon icon-xl"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg></span></div>
                 <h3>Aucun produit trouvé</h3>
                 <p>Essayez de modifier vos filtres ou votre recherche.</p>
                 <button class="btn btn-primary" onclick="resetFilters()">Réinitialiser les filtres</button>
@@ -413,7 +413,7 @@ function createProductCard(product) {
                     <button class="btn btn-primary btn-sm add-to-cart-btn"
                             data-product-id="${product.id}"
                             ${!product.enStock ? 'disabled' : ''}>
-                        ${product.enStock ? '🛒 Ajouter' : 'Indisponible'}
+                        ${product.enStock ? '<span class="icon icon-sm"><svg viewBox="0 0 24 24"><circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/></svg></span> Ajouter' : 'Indisponible'}
                     </button>
                 </div>
             </div>
@@ -556,8 +556,8 @@ function displayProductDetail(product) {
     if (stockBadge) {
         stockBadge.className = `stock-badge ${product.enStock ? 'in-stock' : 'out-of-stock'}`;
         stockBadge.innerHTML = product.enStock
-            ? '✓ En stock'
-            : '✗ Rupture de stock';
+            ? '<span class="icon icon-sm"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg></span> En stock'
+            : '<span class="icon icon-sm"><svg viewBox="0 0 24 24"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></span> Rupture de stock';
     }
 
     // Prescription
@@ -570,7 +570,7 @@ function displayProductDetail(product) {
     const addBtn = document.querySelector('.add-to-cart-detail');
     if (addBtn) {
         addBtn.disabled = !product.enStock;
-        addBtn.textContent = product.enStock ? '🛒 Ajouter au panier' : 'Produit indisponible';
+        addBtn.innerHTML = product.enStock ? '<span class="icon icon-sm"><svg viewBox="0 0 24 24"><circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/></svg></span> Ajouter au panier' : 'Produit indisponible';
 
         addBtn.addEventListener('click', function() {
             const quantity = parseInt(document.querySelector('.quantity-input')?.value) || 1;
@@ -630,7 +630,7 @@ function displayProductNotFound() {
         main.innerHTML = `
             <div class="container">
                 <div class="empty-state" style="padding: 4rem 0;">
-                    <div class="empty-state-icon">😕</div>
+                    <div class="empty-state-icon"><span class="icon icon-xl"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M16 16s-1.5-2-4-2-4 2-4 2"/><line x1="9" x2="9.01" y1="9" y2="9"/><line x1="15" x2="15.01" y1="9" y2="9"/></svg></span></div>
                     <h3>Produit introuvable</h3>
                     <p>Le produit que vous recherchez n'existe pas ou a été supprimé.</p>
                     <a href="index.html" class="btn btn-primary">Retour à l'accueil</a>

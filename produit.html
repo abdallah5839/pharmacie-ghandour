@@ -14,17 +14,20 @@
     <!-- Styles -->
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="css/icons.css">
     <link rel="stylesheet" href="css/responsive.css">
 
     <!-- Favicon -->
-    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💊</text></svg>">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%232E7D32' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='m10.5 20.5 10-10a4.95 4.95 0 1 0-7-7l-10 10a4.95 4.95 0 1 0 7 7Z'/><path d='m8.5 8.5 7 7'/></svg>">
 </head>
 <body>
     <!-- Header -->
     <header class="header">
         <div class="header-container">
             <a href="index.html" class="logo">
-                <div class="logo-icon">💊</div>
+                <div class="logo-icon">
+                    <span class="icon"><svg viewBox="0 0 24 24"><path d="m10.5 20.5 10-10a4.95 4.95 0 1 0-7-7l-10 10a4.95 4.95 0 1 0 7 7Z"/><path d="m8.5 8.5 7 7"/></svg></span>
+                </div>
                 <span>Pharmacie Ghandour</span>
             </a>
 
@@ -34,7 +37,7 @@
                     <li class="nav-dropdown">
                         <button class="nav-dropdown-toggle">
                             Produits
-                            <span class="nav-dropdown-arrow">▼</span>
+                            <span class="nav-dropdown-arrow"><span class="icon"><svg viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></svg></span></span>
                         </button>
                         <div class="nav-dropdown-menu" id="categories-dropdown">
                             <!-- Chargé dynamiquement -->
@@ -46,12 +49,14 @@
 
             <div class="search-bar">
                 <input type="text" placeholder="Rechercher un produit..." aria-label="Rechercher">
-                <button type="button" aria-label="Rechercher">🔍</button>
+                <button type="button" aria-label="Rechercher">
+                    <span class="icon"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg></span>
+                </button>
                 <div class="search-suggestions"></div>
             </div>
 
             <a href="panier.html" class="cart-icon" aria-label="Panier">
-                🛒
+                <span class="icon"><svg viewBox="0 0 24 24"><circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/></svg></span>
                 <span class="cart-count hidden">0</span>
             </a>
 
@@ -87,7 +92,7 @@
 
                     <!-- Informations produit -->
                     <div class="product-detail-info">
-                        <span class="stock-badge in-stock">✓ En stock</span>
+                        <span class="stock-badge in-stock"><span class="icon icon-sm"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg></span> En stock</span>
                         <span class="prescription-badge" style="display: none; background: var(--error); color: white; padding: 4px 12px; border-radius: 4px; font-size: 0.85rem; margin-left: 8px;">
                             Ordonnance requise
                         </span>
@@ -112,7 +117,7 @@
                                 <button class="quantity-btn plus">+</button>
                             </div>
                             <button class="btn btn-primary btn-lg add-to-cart-detail">
-                                🛒 Ajouter au panier
+                                <span class="icon"><svg viewBox="0 0 24 24"><circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/></svg></span> Ajouter au panier
                             </button>
                         </div>
                     </div>
@@ -169,7 +174,7 @@
     <div class="sticky-add-to-cart" id="sticky-cart">
         <span class="sticky-price" id="sticky-price">0 FCFA</span>
         <button class="btn btn-primary" id="sticky-add-btn">
-            🛒 Ajouter au panier
+            <span class="icon"><svg viewBox="0 0 24 24"><circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/></svg></span> Ajouter
         </button>
     </div>
 
@@ -178,26 +183,26 @@
         <ul class="bottom-nav-list">
             <li>
                 <a href="index.html" class="bottom-nav-item" data-page="index">
-                    <span class="bottom-nav-icon">🏠</span>
+                    <span class="bottom-nav-icon"><span class="icon"><svg viewBox="0 0 24 24"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></span></span>
                     <span class="bottom-nav-label">Accueil</span>
                 </a>
             </li>
             <li>
                 <a href="categorie.html" class="bottom-nav-item" data-page="categorie">
-                    <span class="bottom-nav-icon">📦</span>
+                    <span class="bottom-nav-icon"><span class="icon"><svg viewBox="0 0 24 24"><path d="m7.5 4.27 9 5.15"/><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/><path d="m3.3 7 8.7 5 8.7-5"/><path d="M12 22V12"/></svg></span></span>
                     <span class="bottom-nav-label">Produits</span>
                 </a>
             </li>
             <li>
                 <a href="panier.html" class="bottom-nav-item" data-page="panier">
-                    <span class="bottom-nav-icon">🛒</span>
+                    <span class="bottom-nav-icon"><span class="icon"><svg viewBox="0 0 24 24"><circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/></svg></span></span>
                     <span class="bottom-nav-label">Panier</span>
                     <span class="nav-badge hidden" id="bottom-cart-count">0</span>
                 </a>
             </li>
             <li>
                 <a href="contact.html" class="bottom-nav-item" data-page="contact">
-                    <span class="bottom-nav-icon">📍</span>
+                    <span class="bottom-nav-icon"><span class="icon"><svg viewBox="0 0 24 24"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg></span></span>
                     <span class="bottom-nav-label">Contact</span>
                 </a>
             </li>
@@ -205,6 +210,7 @@
     </nav>
 
     <!-- Scripts -->
+    <script src="js/icons.js"></script>
     <script src="js/main.js"></script>
     <script src="js/products.js"></script>
     <script src="js/cart.js"></script>
