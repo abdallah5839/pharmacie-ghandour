@@ -1,0 +1,470 @@
+/* ============================================
+   PHARMACIE GHANDOUR - Responsive Design
+   ============================================ */
+
+/* Tablet: 768px - 1024px */
+@media (max-width: 1024px) {
+    :root {
+        --container-padding: 1.5rem;
+    }
+
+    h1 { font-size: 2rem; }
+    h2 { font-size: 1.75rem; }
+
+    /* Header */
+    .search-bar {
+        width: 250px;
+    }
+
+    /* Grilles */
+    .categories-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+
+    .products-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+
+    /* Carrousel */
+    .carousel-track .product-card {
+        flex: 0 0 calc(33.333% - var(--spacing-lg) * 2 / 3);
+        min-width: 220px;
+    }
+
+    /* Footer */
+    .footer-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    /* Contact */
+    .contact-grid {
+        grid-template-columns: 1fr;
+    }
+
+    /* Produit détail */
+    .product-detail {
+        gap: var(--spacing-xl);
+    }
+}
+
+/* Mobile: < 768px */
+@media (max-width: 768px) {
+    :root {
+        --container-padding: 1rem;
+    }
+
+    h1 { font-size: 1.75rem; }
+    h2 { font-size: 1.5rem; }
+    h3 { font-size: 1.25rem; }
+
+    /* Header */
+    .header-container {
+        flex-wrap: wrap;
+        gap: var(--spacing-md);
+    }
+
+    .logo {
+        font-size: 1.25rem;
+    }
+
+    .logo-icon {
+        width: 35px;
+        height: 35px;
+        font-size: 1.25rem;
+    }
+
+    .nav-links {
+        display: none;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        background: var(--white);
+        flex-direction: column;
+        padding: var(--spacing-md);
+        box-shadow: var(--shadow-md);
+        gap: 0;
+    }
+
+    .nav-links.active {
+        display: flex;
+    }
+
+    .nav-link {
+        padding: var(--spacing-md);
+        border-bottom: 1px solid var(--border);
+    }
+
+    .nav-link::after {
+        display: none;
+    }
+
+    .menu-toggle {
+        display: flex;
+        order: 3;
+    }
+
+    .menu-toggle.active span:nth-child(1) {
+        transform: rotate(45deg) translate(5px, 5px);
+    }
+
+    .menu-toggle.active span:nth-child(2) {
+        opacity: 0;
+    }
+
+    .menu-toggle.active span:nth-child(3) {
+        transform: rotate(-45deg) translate(7px, -6px);
+    }
+
+    .search-bar {
+        width: 100%;
+        order: 4;
+    }
+
+    .cart-icon {
+        order: 2;
+    }
+
+    /* Dropdown menu mobile */
+    .nav-dropdown {
+        width: 100%;
+    }
+
+    .nav-dropdown-toggle {
+        width: 100%;
+        justify-content: space-between;
+        padding: var(--spacing-md);
+        border-bottom: 1px solid var(--border);
+    }
+
+    .nav-dropdown-menu {
+        position: static;
+        transform: none;
+        box-shadow: none;
+        border-radius: 0;
+        max-height: 0;
+        overflow: hidden;
+        padding: 0;
+        opacity: 1;
+        visibility: visible;
+        background: var(--off-white);
+    }
+
+    .nav-dropdown.active .nav-dropdown-menu {
+        max-height: 500px;
+        padding: var(--spacing-sm) 0;
+        transform: none;
+    }
+
+    .nav-dropdown-menu a {
+        padding-left: var(--spacing-xl);
+    }
+
+    /* Carrousel mobile */
+    .product-carousel {
+        padding: 0 var(--spacing-lg);
+    }
+
+    .carousel-track .product-card {
+        flex: 0 0 calc(50% - var(--spacing-md) / 2);
+        min-width: 160px;
+    }
+
+    .carousel-btn {
+        width: 36px;
+        height: 36px;
+        font-size: 1rem;
+    }
+
+    /* Hero */
+    .hero {
+        padding: var(--spacing-2xl) 0;
+    }
+
+    .hero h1 {
+        font-size: 1.75rem;
+    }
+
+    .hero p {
+        font-size: 1rem;
+    }
+
+    /* Sections */
+    .section {
+        padding: var(--spacing-2xl) 0;
+    }
+
+    /* Grilles */
+    .categories-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: var(--spacing-md);
+    }
+
+    .products-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: var(--spacing-md);
+    }
+
+    .category-card {
+        padding: var(--spacing-md);
+    }
+
+    .category-icon {
+        width: 50px;
+        height: 50px;
+        font-size: 1.5rem;
+    }
+
+    .category-card h3 {
+        font-size: 0.95rem;
+    }
+
+    /* Produit card */
+    .product-info {
+        padding: var(--spacing-sm);
+    }
+
+    .product-name {
+        font-size: 0.9rem;
+    }
+
+    .product-price {
+        font-size: 1.1rem;
+    }
+
+    .product-actions {
+        flex-direction: column;
+    }
+
+    /* Footer */
+    .footer-grid {
+        grid-template-columns: 1fr;
+        gap: var(--spacing-lg);
+    }
+
+    /* Filtres mobile */
+    .filters-sidebar {
+        position: fixed;
+        top: 0;
+        left: -100%;
+        width: 85%;
+        max-width: 300px;
+        height: 100%;
+        z-index: 2000;
+        overflow-y: auto;
+        transition: left var(--transition-normal);
+        border-radius: 0;
+    }
+
+    .filters-sidebar.active {
+        left: 0;
+    }
+
+    .filters-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 1999;
+        display: none;
+    }
+
+    .filters-overlay.active {
+        display: block;
+    }
+
+    .filter-toggle-btn {
+        display: flex;
+    }
+
+    /* Sort bar */
+    .sort-bar {
+        flex-direction: column;
+        gap: var(--spacing-md);
+        align-items: stretch;
+    }
+
+    .sort-options {
+        justify-content: space-between;
+    }
+
+    /* Panier */
+    .cart-item {
+        flex-direction: column;
+    }
+
+    .cart-item-image {
+        width: 100%;
+        height: 150px;
+    }
+
+    .cart-item-actions {
+        flex-wrap: wrap;
+    }
+
+    /* Produit détail */
+    .product-detail {
+        grid-template-columns: 1fr;
+        gap: var(--spacing-lg);
+    }
+
+    .product-detail-price {
+        font-size: 1.5rem;
+    }
+
+    .add-to-cart-section {
+        flex-direction: column;
+    }
+
+    .add-to-cart-section .btn {
+        width: 100%;
+    }
+
+    /* Formulaires */
+    .form-row {
+        flex-direction: column;
+    }
+
+    /* Pagination */
+    .pagination {
+        flex-wrap: wrap;
+    }
+
+    /* Confirmation */
+    .confirmation-box {
+        padding: var(--spacing-lg);
+    }
+
+    .confirmation-icon {
+        width: 60px;
+        height: 60px;
+        font-size: 2rem;
+    }
+
+    /* Toast */
+    .toast-container {
+        left: var(--spacing-md);
+        right: var(--spacing-md);
+        bottom: var(--spacing-md);
+    }
+
+    .toast {
+        width: 100%;
+    }
+
+    /* Layout catégorie */
+    .category-layout {
+        flex-direction: column;
+    }
+
+    .category-sidebar {
+        width: 100%;
+    }
+
+    .category-content {
+        width: 100%;
+    }
+}
+
+/* Small mobile: < 480px */
+@media (max-width: 480px) {
+    h1 { font-size: 1.5rem; }
+    h2 { font-size: 1.25rem; }
+
+    .categories-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .products-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .product-card {
+        display: flex;
+        flex-direction: row;
+    }
+
+    .product-image {
+        width: 120px;
+        height: 120px;
+        aspect-ratio: auto;
+    }
+
+    .product-info {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+
+    .product-actions {
+        flex-direction: row;
+    }
+
+    .btn {
+        padding: var(--spacing-sm) var(--spacing-md);
+        font-size: 0.9rem;
+    }
+
+    .btn-lg {
+        padding: var(--spacing-sm) var(--spacing-lg);
+        font-size: 1rem;
+    }
+
+    /* Quantité selector */
+    .quantity-btn {
+        width: 35px;
+        height: 35px;
+    }
+
+    .quantity-input {
+        width: 45px;
+        height: 35px;
+    }
+}
+
+/* Print styles */
+@media print {
+    .header,
+    .footer,
+    .btn,
+    .cart-icon,
+    .search-bar,
+    .filters-sidebar,
+    .sort-bar,
+    .pagination {
+        display: none !important;
+    }
+
+    body {
+        font-size: 12pt;
+    }
+
+    .container {
+        max-width: 100%;
+        padding: 0;
+    }
+
+    .product-card {
+        break-inside: avoid;
+        page-break-inside: avoid;
+    }
+}
+
+/* Préférence de mouvement réduit */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
+/* Mode sombre (optionnel pour le futur) */
+@media (prefers-color-scheme: dark) {
+    /* Les styles dark mode peuvent être ajoutés ici si nécessaire */
+}

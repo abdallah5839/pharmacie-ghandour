@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Pharmacie Ghandour à Dakar - Commandez vos médicaments et produits de parapharmacie en ligne pour retrait en pharmacie.">
+    <title>Pharmacie Ghandour - Votre pharmacie à Dakar</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="css/responsive.css">
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💊</text></svg>">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-container">
+            <a href="index.html" class="logo">
+                <div class="logo-icon">💊</div>
+                <span>Pharmacie Ghandour</span>
+            </a>
+
+            <nav class="nav">
+                <ul class="nav-links">
+                    <li><a href="index.html" class="nav-link active">Accueil</a></li>
+                    <li class="nav-dropdown">
+                        <button class="nav-dropdown-toggle">
+                            Produits
+                            <span class="nav-dropdown-arrow">▼</span>
+                        </button>
+                        <div class="nav-dropdown-menu" id="categories-dropdown">
+                            <!-- Chargé dynamiquement -->
+                        </div>
+                    </li>
+                    <li><a href="contact.html" class="nav-link">Contact</a></li>
+                </ul>
+            </nav>
+
+            <div class="search-bar">
+                <input type="text" placeholder="Rechercher un produit..." aria-label="Rechercher">
+                <button type="button" aria-label="Rechercher">🔍</button>
+                <div class="search-suggestions"></div>
+            </div>
+
+            <a href="panier.html" class="cart-icon" aria-label="Panier">
+                🛒
+                <span class="cart-count hidden">0</span>
+            </a>
+
+            <div class="menu-toggle" aria-label="Menu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <!-- Hero Section -->
+        <section class="hero">
+            <div class="container">
+                <h1>Bienvenue à la Pharmacie Ghandour</h1>
+                <p>Votre santé est notre priorité. Parcourez notre catalogue et passez votre commande pour un retrait rapide en pharmacie.</p>
+                <a href="categorie.html" class="btn btn-lg" style="background: white; color: var(--primary-green);">
+                    Découvrir nos produits
+                </a>
+            </div>
+        </section>
+
+        <!-- Carrousel 1: Les Plus Achetés -->
+        <section class="section">
+            <div class="container">
+                <div class="product-carousel" id="carousel-popular">
+                    <div class="product-carousel-title">
+                        <h2>🔥 Les Plus Achetés</h2>
+                        <a href="categorie.html">Voir tout →</a>
+                    </div>
+                    <div class="carousel-container">
+                        <button class="carousel-btn prev" aria-label="Précédent">‹</button>
+                        <div class="carousel-track">
+                            <!-- Chargé dynamiquement -->
+                        </div>
+                        <button class="carousel-btn next" aria-label="Suivant">›</button>
+                    </div>
+                    <div class="carousel-indicators"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Carrousel 2: Médicaments -->
+        <section class="section section-alt">
+            <div class="container">
+                <div class="product-carousel" id="carousel-medicaments">
+                    <div class="product-carousel-title">
+                        <h2>💊 Médicaments</h2>
+                        <a href="categorie.html?cat=medicaments">Voir tout →</a>
+                    </div>
+                    <div class="carousel-container">
+                        <button class="carousel-btn prev" aria-label="Précédent">‹</button>
+                        <div class="carousel-track">
+                            <!-- Chargé dynamiquement -->
+                        </div>
+                        <button class="carousel-btn next" aria-label="Suivant">›</button>
+                    </div>
+                    <div class="carousel-indicators"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Carrousel 3: Beauté -->
+        <section class="section">
+            <div class="container">
+                <div class="product-carousel" id="carousel-beaute">
+                    <div class="product-carousel-title">
+                        <h2>✨ Beauté</h2>
+                        <a href="categorie.html?cat=soin-visage">Voir tout →</a>
+                    </div>
+                    <div class="carousel-container">
+                        <button class="carousel-btn prev" aria-label="Précédent">‹</button>
+                        <div class="carousel-track">
+                            <!-- Chargé dynamiquement -->
+                        </div>
+                        <button class="carousel-btn next" aria-label="Suivant">›</button>
+                    </div>
+                    <div class="carousel-indicators"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Avantages -->
+        <section class="section section-alt">
+            <div class="container">
+                <div class="section-title">
+                    <h2>Pourquoi nous choisir ?</h2>
+                </div>
+                <div class="categories-grid" style="grid-template-columns: repeat(3, 1fr);">
+                    <div class="category-card" style="cursor: default;">
+                        <div class="category-icon">⚡</div>
+                        <h3>Retrait Rapide</h3>
+                        <p>Commandez en ligne et récupérez votre commande en quelques heures</p>
+                    </div>
+                    <div class="category-card" style="cursor: default;">
+                        <div class="category-icon">💯</div>
+                        <h3>Produits Authentiques</h3>
+                        <p>Tous nos produits sont certifiés et proviennent de fournisseurs agréés</p>
+                    </div>
+                    <div class="category-card" style="cursor: default;">
+                        <div class="category-icon">👨‍⚕️</div>
+                        <h3>Conseils d'Experts</h3>
+                        <p>Notre équipe de pharmaciens est à votre écoute pour vous conseiller</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <h4>Pharmacie Ghandour</h4>
+                    <p>Votre partenaire santé de confiance à Dakar depuis plus de 20 ans.</p>
+                </div>
+                <div class="footer-col">
+                    <h4>Liens Rapides</h4>
+                    <ul>
+                        <li><a href="index.html">Accueil</a></li>
+                        <li><a href="categorie.html">Produits</a></li>
+                        <li><a href="panier.html">Panier</a></li>
+                        <li><a href="contact.html">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Contact</h4>
+                    <p>Avenue Cheikh Anta Diop<br>Dakar, Sénégal</p>
+                    <p>Tél: +221 33 XXX XX XX</p>
+                    <p>Email: contact@pharmacieghandour.sn</p>
+                </div>
+                <div class="footer-col">
+                    <h4>Horaires d'ouverture</h4>
+                    <p>Lundi - Samedi: 8h - 22h</p>
+                    <p>Dimanche: 9h - 13h</p>
+                    <p style="color: var(--accent); margin-top: 10px;">Service de garde disponible</p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 Pharmacie Ghandour. Tous droits réservés.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="js/main.js"></script>
+    <script src="js/products.js"></script>
+    <script src="js/cart.js"></script>
+    <script src="js/carousel.js"></script>
+</body>
+</html>
