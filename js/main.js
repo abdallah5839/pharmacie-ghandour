@@ -9,10 +9,10 @@ const CONFIG = {
     phonePrefixes: ['+221', '77', '78', '76', '70', '75', '33'],
     storeInfo: {
         name: 'Pharmacie Ghandour',
-        address: 'Avenue Cheikh Anta Diop, Dakar, Sénégal',
-        phone: '+221 33 XXX XX XX',
+        address: 'Rue Huart, Dakar, Sénégal',
+        phone: '+221 33 821 68 20',
         email: 'contact@pharmacieghandour.sn',
-        hours: 'Lun-Sam: 8h-22h | Dim: 9h-13h'
+        hours: 'Lun-Ven: 08:30-19:30 | Sam: 08:30-13:00 | Dim: Fermé'
     }
 };
 

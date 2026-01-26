@@ -214,10 +214,14 @@ function generateTimeSlots() {
         const dayName = day === 0 ? "Aujourd'hui" : "Demain";
         const dateStr = date.toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long' });
 
-        // Heures d'ouverture: 8h-22h (Lun-Sam), 9h-13h (Dim)
+        // Heures d'ouverture: Lun-Ven 08:30-19:30, Sam 08:30-13:00, Dim Fermé
         const dayOfWeek = date.getDay();
-        const startHour = dayOfWeek === 0 ? 9 : 8;
-        const endHour = dayOfWeek === 0 ? 13 : 22;
+
+        // Dimanche fermé - passer au jour suivant
+        if (dayOfWeek === 0) continue;
+
+        const startHour = 9; // Première heure complète après 08:30
+        const endHour = dayOfWeek === 6 ? 13 : 19; // Samedi jusqu'à 13h, sinon 19h
 
         for (let hour = startHour; hour < endHour; hour++) {
             // Pour aujourd'hui, ne montrer que les créneaux futurs (+ 1h de préparation)
