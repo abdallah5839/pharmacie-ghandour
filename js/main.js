@@ -26,10 +26,24 @@ const AppState = {
 
 // Initialisation au chargement du DOM
 document.addEventListener('DOMContentLoaded', function() {
+    console.log('========================================');
+    console.log('📱 MAIN.JS - DOMCONTENTLOADED');
+    console.log('========================================');
+    console.log('URL:', window.location.href);
+
+    console.log('1️⃣ initNavigation()...');
     initNavigation();
+
+    console.log('2️⃣ initSearch()...');
     initSearch();
+
+    console.log('3️⃣ initCartIcon()...');
     initCartIcon();
+
+    console.log('4️⃣ loadProducts()...');
     loadProducts();
+
+    console.log('📱 MAIN.JS - Init terminée, attente chargement async...');
 });
 
 /* ============================================
@@ -242,23 +256,109 @@ function updateCartCount() {
 }
 
 /* ============================================
-   Chargement des produits
+   Chargement des produits (Sanity + Fallback JSON)
    ============================================ */
 async function loadProducts() {
+    console.log('🔄 Début du chargement des produits...');
+
+    // Timeout pour éviter le chargement infini (10 secondes)
+    const timeoutPromise = (ms) => new Promise((_, reject) =>
+        setTimeout(() => reject(new Error('Timeout: Sanity API trop lent')), ms)
+    );
+
     try {
+        // Essayer de charger depuis Sanity d'abord
+        if (window.SanityClient) {
+            console.log('🔄 Tentative de chargement depuis Sanity...');
+
+            const [sanityProducts, sanityCategories] = await Promise.race([
+                Promise.all([
+                    window.SanityClient.getProducts(),
+                    window.SanityClient.getCategories()
+                ]),
+                timeoutPromise(10000) // 10 secondes max
+            ]);
+
+            console.log('🔄 Réponse Sanity - Produits:', sanityProducts?.length || 0, '- Catégories:', sanityCategories?.length || 0);
+
+            if (sanityProducts && sanityProducts.length > 0) {
+                // Transformer les produits Sanity au format attendu
+                AppState.products = sanityProducts.map(p => window.SanityClient.transformProduct(p));
+                AppState.categories = (sanityCategories || []).map(c => window.SanityClient.transformCategory(c));
+                AppState.dataSource = 'sanity';
+
+                // DEBUG: Afficher les données chargées
+                console.log('✅ Données chargées depuis Sanity CMS');
+                console.log('📦 Produits:', AppState.products.length);
+                console.log('📁 Catégories:', AppState.categories.length);
+                if (AppState.products[0]) {
+                    console.log('🔍 Premier produit:', AppState.products[0].id, '-', AppState.products[0].nom);
+                }
+
+                document.dispatchEvent(new CustomEvent('productsLoaded', {
+                    detail: {
+                        products: AppState.products,
+                        categories: AppState.categories,
+                        source: 'sanity'
+                    }
+                }));
+                console.log('✅ Événement productsLoaded déclenché');
+                return;
+            } else {
+                console.warn('⚠️ Sanity a retourné 0 produits, fallback sur JSON');
+            }
+        } else {
+            console.warn('⚠️ SanityClient non disponible, fallback sur JSON');
+        }
+
+        // Fallback: charger depuis le fichier JSON local
+        await loadProductsFromJSON();
+
+    } catch (error) {
+        console.error('❌ Erreur Sanity:', error);
+        console.warn('🔄 Fallback sur JSON local...');
+        await loadProductsFromJSON();
+    }
+}
+
+async function loadProductsFromJSON() {
+    try {
+        console.log('🔄 Chargement depuis JSON local...');
         const response = await fetch('data/products.json');
-        if (!response.ok) throw new Error('Erreur de chargement');
+        if (!response.ok) throw new Error('Erreur de chargement JSON: ' + response.status);
 
         const data = await response.json();
         AppState.products = data.products || [];
         AppState.categories = data.categories || [];
+        AppState.dataSource = 'json';
 
-        // Déclencher un événement pour signaler que les produits sont chargés
+        console.log('📁 Données chargées depuis JSON local');
+        console.log('📦 Produits:', AppState.products.length);
+        console.log('📁 Catégories:', AppState.categories.length);
+
         document.dispatchEvent(new CustomEvent('productsLoaded', {
-            detail: { products: AppState.products, categories: AppState.categories }
+            detail: {
+                products: AppState.products,
+                categories: AppState.categories,
+                source: 'json'
+            }
         }));
+        console.log('✅ Événement productsLoaded déclenché (JSON)');
     } catch (error) {
-        console.warn('Impossible de charger les produits:', error);
+        console.error('❌ Impossible de charger les produits:', error);
+        AppState.products = [];
+        AppState.categories = [];
+
+        // Déclencher l'événement même en cas d'erreur pour débloquer l'UI
+        document.dispatchEvent(new CustomEvent('productsLoaded', {
+            detail: {
+                products: [],
+                categories: [],
+                source: 'error',
+                error: error.message
+            }
+        }));
+        console.log('⚠️ Événement productsLoaded déclenché (avec erreur)');
     }
 }
 
@@ -271,7 +371,21 @@ function getCategories() {
 }
 
 function getProductById(id) {
-    return AppState.products.find(p => p.id === id);
+    if (!id) return null;
+
+    // Recherche exacte d'abord
+    let product = AppState.products.find(p => p.id === id);
+
+    // Si pas trouvé, essayer des correspondances alternatives
+    if (!product) {
+        product = AppState.products.find(p =>
+            p.id === `product-${id}` ||
+            (p.id && p.id.includes(id)) ||
+            (id && id.includes(p.id))
+        );
+    }
+
+    return product;
 }
 
 function getProductsByCategory(categoryId) {
@@ -286,6 +400,11 @@ function getPopularProducts() {
    Utilitaires
    ============================================ */
 function formatPrice(price) {
+    // Gestion des prix invalides
+    if (price === null || price === undefined || isNaN(price)) {
+        console.warn('⚠️ Prix invalide:', price);
+        return '-- ' + CONFIG.currency;
+    }
     return new Intl.NumberFormat('fr-FR').format(price) + ' ' + CONFIG.currency;
 }
 

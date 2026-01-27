@@ -155,12 +155,25 @@ function initCarousel(carouselId, products) {
     track.innerHTML = products.map(product => createCarouselCard(product)).join('');
 
     // Attacher les événements d'ajout au panier
-    track.querySelectorAll('.add-to-cart-btn').forEach(btn => {
+    const cartButtons = track.querySelectorAll('.add-to-cart-btn');
+    console.log('🎠 Carousel: Attachement événements sur', cartButtons.length, 'boutons');
+
+    cartButtons.forEach((btn, index) => {
+        const productId = btn.dataset.productId;
+        console.log(`   - Bouton carousel ${index + 1}: ID="${productId}"`);
+
         btn.addEventListener('click', function(e) {
             e.preventDefault();
-            const productId = this.dataset.productId;
+            e.stopPropagation();
+            console.log('🖱️ CLIC carousel - Ajouter au panier!');
+            console.log('   - ProductId:', this.dataset.productId);
+            console.log('   - window.addToCart existe?', typeof window.addToCart);
+
             if (window.addToCart) {
-                window.addToCart(productId, 1);
+                window.addToCart(this.dataset.productId, 1);
+            } else {
+                console.error('❌ window.addToCart n\'existe pas!');
+                alert('Erreur: fonction addToCart non trouvée');
             }
         });
     });
