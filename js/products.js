@@ -19,27 +19,94 @@ const FilterState = {
 
 // Initialisation
 document.addEventListener('DOMContentLoaded', function() {
+    console.log('========================================');
+    console.log('📄 PRODUCTS.JS - DOMCONTENTLOADED');
+    console.log('========================================');
+    console.log('URL:', window.location.href);
+    console.log('Pathname:', window.location.pathname);
+    console.log('Search:', window.location.search);
+
+    // Vérifier l'état actuel
+    console.log('PharmacieApp existe?', !!window.PharmacieApp);
+    console.log('SanityClient existe?', !!window.SanityClient);
+
+    if (window.PharmacieApp) {
+        const currentProducts = window.PharmacieApp.getProducts();
+        console.log('Produits déjà chargés?', currentProducts.length);
+    }
+
     // Attendre le chargement des produits
-    document.addEventListener('productsLoaded', initProductsPage);
+    document.addEventListener('productsLoaded', function(e) {
+        console.log('========================================');
+        console.log('📄 EVENT: productsLoaded REÇU!');
+        console.log('========================================');
+        console.log('Source:', e.detail?.source);
+        console.log('Nombre de produits:', e.detail?.products?.length);
+        initProductsPage();
+    });
 
     // Si les produits sont déjà chargés
     if (window.PharmacieApp && window.PharmacieApp.getProducts().length > 0) {
+        console.log('✅ Produits déjà disponibles, initialisation immédiate');
         initProductsPage();
+    } else {
+        console.log('⏳ En attente du chargement des produits...');
+        console.log('   (l\'événement productsLoaded devrait arriver bientôt)');
+
+        // FALLBACK: Si après 3 secondes les produits ne sont toujours pas là, réessayer
+        setTimeout(function() {
+            if (window.PharmacieApp && window.PharmacieApp.getProducts().length > 0) {
+                console.log('⏰ FALLBACK: Produits trouvés après délai, initialisation...');
+                initProductsPage();
+            } else {
+                console.error('❌ FALLBACK: Toujours pas de produits après 3 secondes!');
+                console.log('Vérification manuelle...');
+
+                // Essayer de recharger les produits manuellement
+                if (window.SanityClient) {
+                    console.log('Tentative de rechargement depuis Sanity...');
+                    window.SanityClient.getProducts().then(products => {
+                        console.log('Produits récupérés manuellement:', products?.length);
+                        if (products && products.length > 0) {
+                            // Forcer la mise à jour de AppState via un hack
+                            const transformed = products.map(p => window.SanityClient.transformProduct(p));
+                            console.log('Produits transformés:', transformed.length);
+
+                            // Stocker temporairement pour la page produit
+                            window._tempProducts = transformed;
+                            initProductsPage();
+                        }
+                    }).catch(err => {
+                        console.error('Erreur rechargement:', err);
+                    });
+                }
+            }
+        }, 3000);
     }
 });
 
 function initProductsPage() {
-    // Déterminer la page actuelle
-    const isHomePage = window.location.pathname.endsWith('index.html') ||
-                       window.location.pathname.endsWith('/');
-    const isCategoryPage = window.location.pathname.includes('categorie.html');
-    const isProductPage = window.location.pathname.includes('produit.html');
+    console.log('🚀 initProductsPage() appelée');
+    console.log('🔗 URL actuelle:', window.location.pathname);
+    console.log('🔗 Params URL:', window.location.search);
+
+    // Déterminer la page actuelle (supporte avec ou sans .html)
+    const pathname = window.location.pathname;
+    const isHomePage = pathname.endsWith('index.html') || pathname.endsWith('/') || pathname === '';
+    const isCategoryPage = pathname.includes('categorie.html') || pathname.includes('/categorie');
+    const isProductPage = pathname.includes('produit.html') || pathname.includes('/produit');
+
+    console.log('📍 Type de page - Home:', isHomePage, '| Catégorie:', isCategoryPage, '| Produit:', isProductPage);
 
     // La page d'accueil utilise maintenant les carrousels (carousel.js)
     if (isCategoryPage) {
+        console.log('➡️ Initialisation page CATÉGORIE');
         initCategoryPage();
     } else if (isProductPage) {
+        console.log('➡️ Initialisation page PRODUIT');
         initProductPage();
+    } else {
+        console.log('➡️ Page d\'accueil, pas d\'init spécifique ici');
     }
 }
 
@@ -422,11 +489,19 @@ function createProductCard(product) {
 }
 
 function attachProductCardEvents(container) {
-    container.querySelectorAll('.add-to-cart-btn').forEach(btn => {
+    const buttons = container.querySelectorAll('.add-to-cart-btn');
+    console.log('🔘 Attachement événements sur', buttons.length, 'boutons');
+
+    buttons.forEach((btn, index) => {
+        const productId = btn.dataset.productId;
+        console.log(`   - Bouton ${index + 1}: ID="${productId}"`);
+
         btn.addEventListener('click', function(e) {
             e.preventDefault();
-            const productId = this.dataset.productId;
-            addToCart(productId, 1);
+            e.stopPropagation();
+            console.log('🖱️ CLIC sur bouton Ajouter au panier!');
+            console.log('   - ProductId:', this.dataset.productId);
+            addToCart(this.dataset.productId, 1);
         });
     });
 }
@@ -495,25 +570,135 @@ function displayPagination(totalPages) {
    Page Produit
    ============================================ */
 function initProductPage() {
-    const productId = window.PharmacieApp.getUrlParam('id');
-    if (!productId) {
-        window.location.href = 'index.html';
+    console.log('========================================');
+    console.log('🛍️ INIT PAGE PRODUIT - DÉBUT');
+    console.log('========================================');
+
+    // Vérifier si PharmacieApp existe
+    console.log('1️⃣ PharmacieApp existe?', !!window.PharmacieApp);
+    if (!window.PharmacieApp) {
+        console.error('❌ ERREUR: PharmacieApp n\'existe pas!');
         return;
     }
 
-    const product = window.PharmacieApp.getProductById(productId);
-    if (!product) {
+    // Récupérer l'ID du produit
+    const productId = window.PharmacieApp.getUrlParam('id');
+    console.log('2️⃣ ID du produit dans URL:', productId);
+    console.log('2️⃣ URL complète:', window.location.href);
+    console.log('2️⃣ Search params:', window.location.search);
+
+    if (!productId) {
+        console.warn('⚠️ Pas d\'ID produit dans l\'URL');
+        console.log('URL complète:', window.location.href);
+        console.log('Search:', window.location.search);
+        console.log('❌ ATTENTION: Redirection vers accueil dans 3 secondes...');
+
+        // Afficher un message au lieu de rediriger immédiatement
+        const main = document.querySelector('main');
+        if (main) {
+            main.innerHTML = `
+                <div class="container" style="padding: 2rem; text-align: center;">
+                    <h2>Aucun produit sélectionné</h2>
+                    <p>L'URL ne contient pas d'ID de produit.</p>
+                    <p>URL: ${window.location.href}</p>
+                    <p><a href="index.html" class="btn btn-primary">Retour à l'accueil</a></p>
+                </div>
+            `;
+        }
+
+        // Redirection après 3 secondes
+        setTimeout(() => {
+            window.location.href = 'index.html';
+        }, 3000);
+        return;
+    }
+
+    // Voir combien de produits sont chargés
+    let allProducts = window.PharmacieApp.getProducts();
+    console.log('3️⃣ Nombre de produits en mémoire:', allProducts.length);
+
+    // Fallback: utiliser les produits temporaires si disponibles
+    if (allProducts.length === 0 && window._tempProducts) {
+        console.log('3️⃣ Utilisation des produits temporaires:', window._tempProducts.length);
+        allProducts = window._tempProducts;
+    }
+
+    if (allProducts.length === 0) {
+        console.error('❌ ERREUR: Aucun produit en mémoire!');
+        console.log('Les produits n\'ont pas été chargés depuis Sanity');
+        console.log('Attendez 3 secondes pour le fallback automatique...');
         displayProductNotFound();
         return;
     }
 
+    // Afficher les 5 premiers IDs pour debug
+    console.log('4️⃣ Exemples d\'IDs disponibles:', allProducts.slice(0, 5).map(p => p.id));
+
+    // Chercher le produit
+    console.log('5️⃣ Recherche du produit avec ID:', productId);
+    let product = window.PharmacieApp.getProductById(productId);
+    console.log('   - Résultat getProductById():', product ? product.nom : 'NON TROUVÉ');
+
+    // Si pas trouvé, essayer d'autres méthodes
+    if (!product) {
+        console.log('6️⃣ Tentative de recherche alternative...');
+
+        // Recherche exacte
+        product = allProducts.find(p => p.id === productId);
+        console.log('   - Recherche exacte:', product ? 'TROUVÉ' : 'non trouvé');
+
+        // Avec préfixe product-
+        if (!product) {
+            product = allProducts.find(p => p.id === `product-${productId}`);
+            console.log('   - Avec préfixe product-:', product ? 'TROUVÉ' : 'non trouvé');
+        }
+
+        // Recherche partielle
+        if (!product) {
+            product = allProducts.find(p => p.id && p.id.includes(productId));
+            console.log('   - Recherche partielle (includes):', product ? 'TROUVÉ' : 'non trouvé');
+        }
+
+        // Recherche inverse
+        if (!product) {
+            product = allProducts.find(p => productId.includes(p.id));
+            console.log('   - Recherche inverse:', product ? 'TROUVÉ' : 'non trouvé');
+        }
+    }
+
+    if (!product) {
+        console.error('❌ PRODUIT NON TROUVÉ!');
+        console.log('ID recherché:', productId);
+        console.log('IDs disponibles:', allProducts.map(p => p.id));
+        displayProductNotFound();
+        return;
+    }
+
+    console.log('✅ PRODUIT TROUVÉ!');
+    console.log('   - ID:', product.id);
+    console.log('   - Nom:', product.nom);
+    console.log('   - Prix:', product.prix);
+    console.log('   - Image:', product.image);
+    console.log('   - En stock:', product.enStock);
+
+    console.log('7️⃣ Affichage des détails...');
     displayProductDetail(product);
+
+    console.log('8️⃣ Affichage produits similaires...');
     displaySimilarProducts(product);
+
+    console.log('========================================');
+    console.log('🛍️ INIT PAGE PRODUIT - FIN');
+    console.log('========================================');
 }
 
 function displayProductDetail(product) {
+    console.log('📝 displayProductDetail() - Début');
+    console.log('   - Produit:', product.nom);
+
     // Mettre à jour le titre
     document.title = `${product.nom} - Pharmacie Ghandour`;
+    console.log('   - Titre page mis à jour');
 
     // Breadcrumb
     const breadcrumb = document.querySelector('.breadcrumb-list');
@@ -580,9 +765,12 @@ function displayProductDetail(product) {
 
     // Sélecteur de quantité
     initQuantitySelector();
+
+    console.log('📝 displayProductDetail() - FIN (succès)');
 }
 
 function initQuantitySelector() {
+    console.log('🔢 initQuantitySelector() appelée');
     const minusBtn = document.querySelector('.quantity-btn.minus');
     const plusBtn = document.querySelector('.quantity-btn.plus');
     const input = document.querySelector('.quantity-input');
@@ -644,36 +832,106 @@ function displayProductNotFound() {
    Ajout au panier (utilisé ici et importé par cart.js)
    ============================================ */
 function addToCart(productId, quantity = 1) {
-    console.log('🛒 addToCart appelé avec ID:', productId);
+    console.log('========================================');
+    console.log('🛒 ADD TO CART - DÉBUT');
+    console.log('========================================');
+    console.log('1️⃣ ID reçu:', productId);
+    console.log('1️⃣ Quantité:', quantity);
 
-    const product = window.PharmacieApp.getProductById(productId);
-    console.log('🛒 Produit trouvé:', product);
-
-    if (!product) {
-        console.error('❌ Produit non trouvé avec ID:', productId);
-        console.log('📦 Produits disponibles:', window.PharmacieApp.getProducts().map(p => p.id));
+    // Vérifier PharmacieApp
+    if (!window.PharmacieApp) {
+        console.error('❌ ERREUR: PharmacieApp n\'existe pas!');
+        alert('Erreur: Application non chargée');
         return;
     }
+
+    // Vérifier les produits
+    const allProducts = window.PharmacieApp.getProducts();
+    console.log('2️⃣ Produits en mémoire:', allProducts.length);
+
+    if (allProducts.length === 0) {
+        console.error('❌ ERREUR: Aucun produit chargé!');
+        alert('Erreur: Produits non chargés');
+        return;
+    }
+
+    // Chercher le produit
+    console.log('3️⃣ Recherche du produit...');
+    let product = window.PharmacieApp.getProductById(productId);
+    console.log('   - getProductById():', product ? product.nom : 'NON TROUVÉ');
+
+    // Si pas trouvé, essayer des correspondances alternatives
+    if (!product) {
+        console.log('4️⃣ Recherche alternative...');
+        product = allProducts.find(p => p.id === productId);
+        console.log('   - Exacte:', product ? 'TROUVÉ' : 'non');
+
+        if (!product) {
+            product = allProducts.find(p => p.id === `product-${productId}`);
+            console.log('   - Avec préfixe:', product ? 'TROUVÉ' : 'non');
+        }
+
+        if (!product) {
+            product = allProducts.find(p => p.id && p.id.includes(productId));
+            console.log('   - Partielle:', product ? 'TROUVÉ' : 'non');
+        }
+    }
+
+    if (!product) {
+        console.error('❌ PRODUIT NON TROUVÉ!');
+        console.log('ID recherché:', productId);
+        console.log('5 premiers IDs disponibles:', allProducts.slice(0, 5).map(p => p.id));
+        window.PharmacieApp.showToast('Erreur: Produit non trouvé', 'error');
+        return;
+    }
+
+    console.log('✅ Produit trouvé:', product.nom);
+    console.log('   - ID réel:', product.id);
+    console.log('   - Prix:', product.prix);
+    console.log('   - En stock:', product.enStock);
 
     if (!product.enStock) {
         console.warn('⚠️ Produit en rupture de stock');
+        window.PharmacieApp.showToast('Ce produit est en rupture de stock', 'warning');
         return;
     }
 
+    // Récupérer le panier actuel
+    console.log('5️⃣ Récupération du panier actuel...');
     const cart = window.PharmacieApp.getCart();
-    const existingItem = cart.find(item => item.id === productId);
+    console.log('   - Panier actuel:', JSON.stringify(cart));
+
+    // Ajouter au panier
+    const actualProductId = product.id;
+    const existingItem = cart.find(item => item.id === actualProductId);
 
     if (existingItem) {
         existingItem.quantity += quantity;
+        console.log('6️⃣ Quantité mise à jour:', existingItem.quantity);
     } else {
         cart.push({
-            id: productId,
+            id: actualProductId,
             quantity: quantity
         });
+        console.log('6️⃣ Nouveau produit ajouté');
     }
 
+    // Sauvegarder
+    console.log('7️⃣ Sauvegarde du panier...');
+    console.log('   - Nouveau panier:', JSON.stringify(cart));
     window.PharmacieApp.saveCart(cart);
+
+    // Vérifier la sauvegarde
+    const savedCart = window.PharmacieApp.getCart();
+    console.log('8️⃣ Vérification sauvegarde:', JSON.stringify(savedCart));
+
+    // Notification
+    console.log('9️⃣ Affichage notification...');
     window.PharmacieApp.showToast(`${product.nom} ajouté au panier`, 'success');
+
+    console.log('========================================');
+    console.log('🛒 ADD TO CART - FIN (SUCCÈS)');
+    console.log('========================================');
 }
 
 // Export pour utilisation globale
