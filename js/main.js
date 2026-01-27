@@ -234,23 +234,78 @@ function updateCartCount() {
 }
 
 /* ============================================
-   Chargement des produits
+   Chargement des produits (Sanity + Fallback JSON)
    ============================================ */
 async function loadProducts() {
+    console.log('🔄 Début du chargement des produits...');
+
+    try {
+        // Essayer de charger depuis Sanity d'abord
+        if (window.SanityClient) {
+            console.log('🔄 Chargement depuis Sanity CMS...');
+
+            const [sanityProducts, sanityCategories] = await Promise.all([
+                window.SanityClient.getProducts(),
+                window.SanityClient.getCategories()
+            ]);
+
+            console.log('📦 Sanity - Produits:', sanityProducts?.length || 0);
+            console.log('📁 Sanity - Catégories:', sanityCategories?.length || 0);
+
+            if (sanityProducts && sanityProducts.length > 0) {
+                // Transformer les produits Sanity au format attendu
+                AppState.products = sanityProducts.map(p => window.SanityClient.transformProduct(p));
+                AppState.categories = (sanityCategories || []).map(c => window.SanityClient.transformCategory(c));
+                AppState.dataSource = 'sanity';
+
+                console.log('✅ Données chargées depuis SANITY CMS');
+                console.log('💰 Premier produit:', AppState.products[0]?.nom, '-', AppState.products[0]?.prix, 'FCFA');
+
+                document.dispatchEvent(new CustomEvent('productsLoaded', {
+                    detail: {
+                        products: AppState.products,
+                        categories: AppState.categories,
+                        source: 'sanity'
+                    }
+                }));
+                return;
+            }
+        }
+
+        // Fallback: charger depuis le fichier JSON local
+        console.warn('⚠️ Fallback sur JSON local...');
+        await loadProductsFromJSON();
+
+    } catch (error) {
+        console.error('❌ Erreur Sanity:', error);
+        console.warn('🔄 Fallback sur JSON local...');
+        await loadProductsFromJSON();
+    }
+}
+
+async function loadProductsFromJSON() {
     try {
         const response = await fetch('data/products.json');
-        if (!response.ok) throw new Error('Erreur de chargement');
+        if (!response.ok) throw new Error('Erreur de chargement JSON');
 
         const data = await response.json();
         AppState.products = data.products || [];
         AppState.categories = data.categories || [];
+        AppState.dataSource = 'json';
 
-        // Déclencher un événement pour signaler que les produits sont chargés
+        console.log('📁 Données chargées depuis JSON local');
+
         document.dispatchEvent(new CustomEvent('productsLoaded', {
-            detail: { products: AppState.products, categories: AppState.categories }
+            detail: {
+                products: AppState.products,
+                categories: AppState.categories,
+                source: 'json'
+            }
         }));
     } catch (error) {
-        console.warn('Impossible de charger les produits:', error);
+        console.error('❌ Impossible de charger les produits:', error);
+        AppState.products = [];
+        AppState.categories = [];
     }
 }
 
