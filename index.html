@@ -14,17 +14,20 @@
     <!-- Styles -->
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="css/icons.css">
     <link rel="stylesheet" href="css/responsive.css">
 
     <!-- Favicon -->
-    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💊</text></svg>">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%232E7D32' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='m10.5 20.5 10-10a4.95 4.95 0 1 0-7-7l-10 10a4.95 4.95 0 1 0 7 7Z'/><path d='m8.5 8.5 7 7'/></svg>">
 </head>
 <body>
     <!-- Header -->
     <header class="header">
         <div class="header-container">
             <a href="index.html" class="logo">
-                <div class="logo-icon">💊</div>
+                <div class="logo-icon">
+                    <span class="icon"><svg viewBox="0 0 24 24"><path d="m10.5 20.5 10-10a4.95 4.95 0 1 0-7-7l-10 10a4.95 4.95 0 1 0 7 7Z"/><path d="m8.5 8.5 7 7"/></svg></span>
+                </div>
                 <span>Pharmacie Ghandour</span>
             </a>
 
@@ -34,7 +37,7 @@
                     <li class="nav-dropdown">
                         <button class="nav-dropdown-toggle">
                             Produits
-                            <span class="nav-dropdown-arrow">▼</span>
+                            <span class="nav-dropdown-arrow"><span class="icon"><svg viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></svg></span></span>
                         </button>
                         <div class="nav-dropdown-menu" id="categories-dropdown">
                             <!-- Chargé dynamiquement -->
@@ -46,12 +49,14 @@
 
             <div class="search-bar">
                 <input type="text" placeholder="Rechercher un produit..." aria-label="Rechercher">
-                <button type="button" aria-label="Rechercher">🔍</button>
+                <button type="button" aria-label="Rechercher">
+                    <span class="icon"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg></span>
+                </button>
                 <div class="search-suggestions"></div>
             </div>
 
             <a href="panier.html" class="cart-icon" aria-label="Panier">
-                🛒
+                <span class="icon"><svg viewBox="0 0 24 24"><circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/></svg></span>
                 <span class="cart-count hidden">0</span>
             </a>
 
@@ -80,7 +85,7 @@
             <div class="container">
                 <div class="product-carousel" id="carousel-popular">
                     <div class="product-carousel-title">
-                        <h2>🔥 Les Plus Achetés</h2>
+                        <h2><span class="section-icon"><span class="icon"><svg viewBox="0 0 24 24"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/></svg></span></span>Les Plus Achetés</h2>
                         <a href="categorie.html">Voir tout →</a>
                     </div>
                     <div class="carousel-container">
@@ -100,7 +105,7 @@
             <div class="container">
                 <div class="product-carousel" id="carousel-medicaments">
                     <div class="product-carousel-title">
-                        <h2>💊 Médicaments</h2>
+                        <h2><span class="section-icon"><span class="icon"><svg viewBox="0 0 24 24"><path d="m10.5 20.5 10-10a4.95 4.95 0 1 0-7-7l-10 10a4.95 4.95 0 1 0 7 7Z"/><path d="m8.5 8.5 7 7"/></svg></span></span>Médicaments</h2>
                         <a href="categorie.html?cat=medicaments">Voir tout →</a>
                     </div>
                     <div class="carousel-container">
@@ -120,7 +125,7 @@
             <div class="container">
                 <div class="product-carousel" id="carousel-beaute">
                     <div class="product-carousel-title">
-                        <h2>✨ Beauté</h2>
+                        <h2><span class="section-icon"><span class="icon"><svg viewBox="0 0 24 24"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/><path d="M5 3v4"/><path d="M19 17v4"/><path d="M3 5h4"/><path d="M17 19h4"/></svg></span></span>Beauté</h2>
                         <a href="categorie.html?cat=soin-visage">Voir tout →</a>
                     </div>
                     <div class="carousel-container">
@@ -143,17 +148,23 @@
                 </div>
                 <div class="categories-grid" style="grid-template-columns: repeat(3, 1fr);">
                     <div class="category-card" style="cursor: default;">
-                        <div class="category-icon">⚡</div>
+                        <div class="category-icon">
+                            <span class="icon"><svg viewBox="0 0 24 24"><path d="M4 14a1 1 0 0 1-.78-1.63l9.9-10.2a.5.5 0 0 1 .86.46l-1.92 6.02A1 1 0 0 0 13 10h7a1 1 0 0 1 .78 1.63l-9.9 10.2a.5.5 0 0 1-.86-.46l1.92-6.02A1 1 0 0 0 11 14z"/></svg></span>
+                        </div>
                         <h3>Retrait Rapide</h3>
                         <p>Commandez en ligne et récupérez votre commande en quelques heures</p>
                     </div>
                     <div class="category-card" style="cursor: default;">
-                        <div class="category-icon">💯</div>
+                        <div class="category-icon">
+                            <span class="icon"><svg viewBox="0 0 24 24"><path d="M3.85 8.62a4 4 0 0 1 4.78-4.77 4 4 0 0 1 6.74 0 4 4 0 0 1 4.78 4.78 4 4 0 0 1 0 6.74 4 4 0 0 1-4.77 4.78 4 4 0 0 1-6.75 0 4 4 0 0 1-4.78-4.77 4 4 0 0 1 0-6.76Z"/><path d="m9 12 2 2 4-4"/></svg></span>
+                        </div>
                         <h3>Produits Authentiques</h3>
                         <p>Tous nos produits sont certifiés et proviennent de fournisseurs agréés</p>
                     </div>
                     <div class="category-card" style="cursor: default;">
-                        <div class="category-icon">👨‍⚕️</div>
+                        <div class="category-icon">
+                            <span class="icon"><svg viewBox="0 0 24 24"><path d="M4.8 2.3A.3.3 0 1 0 5 2H4a2 2 0 0 0-2 2v5a6 6 0 0 0 6 6v0a6 6 0 0 0 6-6V4a2 2 0 0 0-2-2h-1a.2.2 0 1 0 .3.3"/><path d="M8 15v1a6 6 0 0 0 6 6v0a6 6 0 0 0 6-6v-4"/><circle cx="20" cy="10" r="2"/></svg></span>
+                        </div>
                         <h3>Conseils d'Experts</h3>
                         <p>Notre équipe de pharmaciens est à votre écoute pour vous conseiller</p>
                     </div>
@@ -181,15 +192,15 @@
                 </div>
                 <div class="footer-col">
                     <h4>Contact</h4>
-                    <p>Avenue Cheikh Anta Diop<br>Dakar, Sénégal</p>
-                    <p>Tél: +221 33 XXX XX XX</p>
+                    <p>Rue Huart<br>Dakar, Sénégal</p>
+                    <p>Tél: +221 33 821 68 20</p>
                     <p>Email: contact@pharmacieghandour.sn</p>
                 </div>
                 <div class="footer-col">
                     <h4>Horaires d'ouverture</h4>
-                    <p>Lundi - Samedi: 8h - 22h</p>
-                    <p>Dimanche: 9h - 13h</p>
-                    <p style="color: var(--accent); margin-top: 10px;">Service de garde disponible</p>
+                    <p>Lun - Ven: 08:30 - 19:30</p>
+                    <p>Samedi: 08:30 - 13:00</p>
+                    <p>Dimanche: Fermé</p>
                 </div>
             </div>
             <div class="footer-bottom">
@@ -198,7 +209,39 @@
         </div>
     </footer>
 
+    <!-- Bottom Navigation Mobile -->
+    <nav class="bottom-nav" id="bottom-nav">
+        <ul class="bottom-nav-list">
+            <li>
+                <a href="index.html" class="bottom-nav-item active" data-page="index">
+                    <span class="bottom-nav-icon"><span class="icon"><svg viewBox="0 0 24 24"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></span></span>
+                    <span class="bottom-nav-label">Accueil</span>
+                </a>
+            </li>
+            <li>
+                <a href="categorie.html" class="bottom-nav-item" data-page="categorie">
+                    <span class="bottom-nav-icon"><span class="icon"><svg viewBox="0 0 24 24"><path d="m7.5 4.27 9 5.15"/><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/><path d="m3.3 7 8.7 5 8.7-5"/><path d="M12 22V12"/></svg></span></span>
+                    <span class="bottom-nav-label">Produits</span>
+                </a>
+            </li>
+            <li>
+                <a href="panier.html" class="bottom-nav-item" data-page="panier">
+                    <span class="bottom-nav-icon"><span class="icon"><svg viewBox="0 0 24 24"><circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/></svg></span></span>
+                    <span class="bottom-nav-label">Panier</span>
+                    <span class="nav-badge hidden" id="bottom-cart-count">0</span>
+                </a>
+            </li>
+            <li>
+                <a href="contact.html" class="bottom-nav-item" data-page="contact">
+                    <span class="bottom-nav-icon"><span class="icon"><svg viewBox="0 0 24 24"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg></span></span>
+                    <span class="bottom-nav-label">Contact</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+
     <!-- Scripts -->
+    <script src="js/icons.js"></script>
     <script src="js/sanity.js"></script>
     <script src="js/main.js"></script>
     <script src="js/products.js"></script>

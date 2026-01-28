@@ -24,32 +24,80 @@ function initCartPage() {
    Affichage du panier
    ============================================ */
 function displayCart() {
+    console.log('========================================');
+    console.log('🛒 DISPLAY CART - DÉBUT');
+    console.log('========================================');
+
     const container = document.getElementById('cart-items');
     const summaryContainer = document.getElementById('cart-summary');
 
-    if (!container) return;
+    if (!container) {
+        console.error('❌ Container cart-items non trouvé!');
+        return;
+    }
 
     const cart = window.PharmacieApp.getCart();
+    console.log('1️⃣ Panier localStorage:', JSON.stringify(cart));
 
     if (cart.length === 0) {
+        console.log('2️⃣ Panier vide, affichage état vide');
         displayEmptyCart(container);
         if (summaryContainer) summaryContainer.style.display = 'none';
         return;
     }
 
     // Récupérer les produits complets
+    const allProducts = window.PharmacieApp.getProducts();
+    console.log('3️⃣ Produits chargés:', allProducts.length);
+    console.log('3️⃣ Source:', window.AppState?.dataSource || 'inconnue');
+    if (allProducts.length > 0) {
+        console.log('3️⃣ Exemples IDs produits:', allProducts.slice(0, 3).map(p => p.id));
+    }
     const cartItems = cart.map(item => {
-        const product = window.PharmacieApp.getProductById(item.id);
-        if (!product) return null;
+        // Chercher le produit par ID exact ou correspondance
+        let product = window.PharmacieApp.getProductById(item.id);
+        if (!product) {
+            product = allProducts.find(p =>
+                p.id === item.id ||
+                p.id.includes(item.id) ||
+                item.id.includes(p.id)
+            );
+        }
+        if (!product) {
+            console.warn('⚠️ Produit non trouvé dans le panier:', item.id);
+            return null;
+        }
         return {
             ...product,
             quantity: item.quantity
         };
     }).filter(item => item !== null);
 
-    // Si tous les produits ont été supprimés de la base
+    console.log('4️⃣ Produits trouvés dans panier:', cartItems.length, '/', cart.length);
+    if (cartItems.length > 0) {
+        console.log('4️⃣ Premier article:', cartItems[0].nom);
+    }
+
+    // Si aucun produit du panier n'a été trouvé
+    if (cartItems.length === 0 && cart.length > 0) {
+        // NE PAS vider le panier ! Les produits n'ont peut-être pas encore chargé
+        console.warn('⚠️ Produits du panier non trouvés. IDs dans le panier:', cart.map(i => i.id));
+        console.warn('⚠️ IDs disponibles:', allProducts.slice(0, 5).map(p => p.id));
+
+        // Afficher un message d'attente au lieu de vider le panier
+        container.innerHTML = `
+            <div class="empty-state">
+                <div class="loader"><div class="loader-spinner"></div></div>
+                <h3>Chargement des produits...</h3>
+                <p>Si ce message persiste, <a href="index.html">retournez à l'accueil</a> et réessayez.</p>
+            </div>
+        `;
+        if (summaryContainer) summaryContainer.style.display = 'none';
+        return;
+    }
+
+    // Panier vraiment vide (l'utilisateur n'a rien ajouté)
     if (cartItems.length === 0) {
-        window.PharmacieApp.clearCart();
         displayEmptyCart(container);
         if (summaryContainer) summaryContainer.style.display = 'none';
         return;
@@ -70,7 +118,7 @@ function displayCart() {
 function displayEmptyCart(container) {
     container.innerHTML = `
         <div class="empty-state">
-            <div class="empty-state-icon">🛒</div>
+            <div class="empty-state-icon"><span class="icon icon-xl"><svg viewBox="0 0 24 24"><circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/></svg></span></div>
             <h3>Votre panier est vide</h3>
             <p>Parcourez notre catalogue et ajoutez des produits à votre panier.</p>
             <a href="index.html" class="btn btn-primary">Découvrir nos produits</a>
@@ -226,8 +274,16 @@ function displayOrderSummary() {
         return;
     }
 
+    const allProducts = window.PharmacieApp.getProducts();
     const cartItems = cart.map(item => {
-        const product = window.PharmacieApp.getProductById(item.id);
+        let product = window.PharmacieApp.getProductById(item.id);
+        if (!product) {
+            product = allProducts.find(p =>
+                p.id === item.id ||
+                p.id.includes(item.id) ||
+                item.id.includes(p.id)
+            );
+        }
         if (!product) return null;
         return { ...product, quantity: item.quantity };
     }).filter(item => item !== null);

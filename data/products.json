@@ -3,56 +3,56 @@
     {
       "id": "soin-visage",
       "nom": "Soins du Visage",
-      "icon": "✨",
+      "icon": "sparkles",
       "count": 8,
       "description": "Crèmes, sérums et soins pour le visage"
     },
     {
       "id": "soin-corps",
       "nom": "Soins du Corps",
-      "icon": "🧴",
+      "icon": "droplet",
       "count": 8,
       "description": "Lotions, huiles et soins corporels"
     },
     {
       "id": "medicaments",
       "nom": "Médicaments",
-      "icon": "💊",
+      "icon": "pill",
       "count": 8,
       "description": "Médicaments courants et essentiels"
     },
     {
       "id": "vitamines",
       "nom": "Vitamines & Compléments",
-      "icon": "🌿",
+      "icon": "leaf",
       "count": 8,
       "description": "Vitamines et compléments alimentaires"
     },
     {
       "id": "bebe-maman",
       "nom": "Bébé & Maman",
-      "icon": "👶",
+      "icon": "baby",
       "count": 8,
       "description": "Produits pour bébés et futures mamans"
     },
     {
       "id": "hygiene",
       "nom": "Hygiène",
-      "icon": "🪥",
+      "icon": "sparkleAlt",
       "count": 8,
       "description": "Produits d'hygiène quotidienne"
     },
     {
       "id": "solaire",
       "nom": "Protection Solaire",
-      "icon": "☀️",
+      "icon": "sun",
       "count": 8,
       "description": "Crèmes solaires et après-soleil"
     },
     {
       "id": "cheveux",
       "nom": "Soins Capillaires",
-      "icon": "💇",
+      "icon": "scissors",
       "count": 8,
       "description": "Shampoings, masques et soins cheveux"
     }

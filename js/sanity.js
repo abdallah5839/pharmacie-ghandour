@@ -1,6 +1,7 @@
 /**
  * Configuration et client Sanity pour Pharmacie Ghandour
  * Gère la récupération des données depuis Sanity CMS
+ * IMPORTANT: useCdn: false pour avoir les données en temps réel
  */
 
 (function() {
@@ -52,7 +53,7 @@
 
         let url = `https://cdn.sanity.io/images/${SANITY_CONFIG.projectId}/${SANITY_CONFIG.dataset}/${id}-${dimensions}.${format}`;
 
-        // Options d'optimisation
+        // Options d'optimisation - toujours ajouter auto=format pour conversion automatique
         const params = ['auto=format'];
         if (options.width) params.push(`w=${options.width}`);
         if (options.height) params.push(`h=${options.height}`);
@@ -97,6 +98,9 @@
     // FONCTIONS PUBLIQUES - CATÉGORIES
     // ==========================================
 
+    /**
+     * Récupère toutes les catégories actives
+     */
     const getCategories = async () => {
         const query = `*[_type == "category" && active == true] | order(ordre asc) {
             _id,
@@ -113,6 +117,9 @@
         return fetchFromSanity(query, {}, 'categories');
     };
 
+    /**
+     * Récupère les catégories pour l'accueil
+     */
     const getCategoriesAccueil = async () => {
         const query = `*[_type == "category" && active == true && afficherAccueil == true] | order(ordre asc) {
             _id,
@@ -127,6 +134,9 @@
         return fetchFromSanity(query, {}, 'categories_accueil');
     };
 
+    /**
+     * Récupère une catégorie par son slug
+     */
     const getCategoryBySlug = async (slug) => {
         const query = `*[_type == "category" && slug.current == $slug][0] {
             _id,
@@ -144,6 +154,9 @@
     // FONCTIONS PUBLIQUES - PRODUITS
     // ==========================================
 
+    /**
+     * Récupère tous les produits publiés
+     */
     const getProducts = async () => {
         const query = `*[_type == "product" && statut == "publie"] | order(nom asc) {
             _id,
@@ -170,6 +183,9 @@
         return fetchFromSanity(query, {}, 'products');
     };
 
+    /**
+     * Récupère les produits par catégorie
+     */
     const getProductsByCategory = async (categorySlug) => {
         const query = `*[_type == "product" && statut == "publie" && categorie->slug.current == $categorySlug] | order(nom asc) {
             _id,
@@ -189,6 +205,9 @@
         return fetchFromSanity(query, { categorySlug });
     };
 
+    /**
+     * Récupère les produits populaires (vedettes)
+     */
     const getPopularProducts = async (limit = 10) => {
         const query = `*[_type == "product" && statut == "publie" && populaire == true][0...${limit}] {
             _id,
@@ -207,6 +226,9 @@
         return fetchFromSanity(query, {}, `popular_${limit}`);
     };
 
+    /**
+     * Récupère un produit par son ID
+     */
     const getProductById = async (id) => {
         const query = `*[_type == "product" && _id == $id][0] {
             _id,
@@ -233,6 +255,9 @@
         return fetchFromSanity(query, { id });
     };
 
+    /**
+     * Récupère un produit par son slug
+     */
     const getProductBySlug = async (slug) => {
         const query = `*[_type == "product" && slug.current == $slug][0] {
             _id,
@@ -259,6 +284,9 @@
         return fetchFromSanity(query, { slug });
     };
 
+    /**
+     * Recherche de produits
+     */
     const searchProducts = async (searchTerm) => {
         const query = `*[_type == "product" && statut == "publie" && (
             nom match $search ||
@@ -285,6 +313,9 @@
     // FONCTIONS PUBLIQUES - COMMANDES
     // ==========================================
 
+    /**
+     * Crée une nouvelle commande dans Sanity
+     */
     const createOrder = async (orderData) => {
         const mutations = [{
             create: {
@@ -318,12 +349,15 @@
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
+                        // Note: Pour créer des documents, un token API est nécessaire
+                        // En production, cette requête devrait passer par un backend
                     },
                     body: JSON.stringify({ mutations })
                 }
             );
 
             if (!response.ok) {
+                // Si pas de token, on simule le succès (mode développement)
                 console.warn('Mode développement: commande non envoyée à Sanity (token manquant)');
                 return { success: true, simulated: true };
             }
@@ -331,6 +365,7 @@
             return await response.json();
         } catch (error) {
             console.error('Erreur lors de la création de la commande:', error);
+            // En cas d'erreur, on ne bloque pas l'utilisateur
             return { success: true, simulated: true, error: error.message };
         }
     };
@@ -339,9 +374,13 @@
     // HELPERS
     // ==========================================
 
+    /**
+     * Transforme un produit Sanity au format attendu par le site
+     */
     const transformProduct = (sanityProduct) => {
         if (!sanityProduct) return null;
 
+        // Générer les URLs d'images avec fallback
         const imageUrl = sanityProduct.image ? getImageUrl(sanityProduct.image, { width: 300, quality: 80 }) : null;
         const imageFullUrl = sanityProduct.image ? getImageUrl(sanityProduct.image, { width: 600, quality: 90 }) : null;
 
@@ -367,6 +406,9 @@
         };
     };
 
+    /**
+     * Transforme une catégorie Sanity au format attendu par le site
+     */
     const transformCategory = (sanityCategory) => {
         if (!sanityCategory) return null;
 
@@ -380,25 +422,46 @@
         };
     };
 
+    /**
+     * Force le rechargement des données depuis Sanity
+     */
+    const forceRefresh = async () => {
+        console.log('🔄 Rechargement forcé des données Sanity...');
+        return {
+            products: await getProducts(),
+            categories: await getCategories()
+        };
+    };
+
     // ==========================================
     // EXPORT GLOBAL
     // ==========================================
 
     window.SanityClient = {
+        // Configuration
         config: SANITY_CONFIG,
+
+        // Catégories
         getCategories,
         getCategoriesAccueil,
         getCategoryBySlug,
+
+        // Produits
         getProducts,
         getProductsByCategory,
         getPopularProducts,
         getProductById,
         getProductBySlug,
         searchProducts,
+
+        // Commandes
         createOrder,
+
+        // Helpers
         getImageUrl,
         transformProduct,
         transformCategory,
+        forceRefresh,
         DEFAULT_IMAGE
     };
 

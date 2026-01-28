@@ -73,47 +73,14 @@
         font-size: 1.25rem;
     }
 
-    .nav-links {
-        display: none;
-        position: absolute;
-        top: 100%;
-        left: 0;
-        right: 0;
-        background: var(--white);
-        flex-direction: column;
-        padding: var(--spacing-md);
-        box-shadow: var(--shadow-md);
-        gap: 0;
-    }
-
+    /* Navigation desktop et hamburger masqués sur mobile - remplacés par bottom-nav */
+    .nav-links,
     .nav-links.active {
-        display: flex;
-    }
-
-    .nav-link {
-        padding: var(--spacing-md);
-        border-bottom: 1px solid var(--border);
-    }
-
-    .nav-link::after {
-        display: none;
+        display: none !important;
     }
 
     .menu-toggle {
-        display: flex;
-        order: 3;
-    }
-
-    .menu-toggle.active span:nth-child(1) {
-        transform: rotate(45deg) translate(5px, 5px);
-    }
-
-    .menu-toggle.active span:nth-child(2) {
-        opacity: 0;
-    }
-
-    .menu-toggle.active span:nth-child(3) {
-        transform: rotate(-45deg) translate(7px, -6px);
+        display: none !important;
     }
 
     .search-bar {
@@ -160,20 +127,49 @@
         padding-left: var(--spacing-xl);
     }
 
-    /* Carrousel mobile */
+    /* Carrousel mobile (tablette) */
     .product-carousel {
-        padding: 0 var(--spacing-lg);
+        padding: 0;
+        overflow: visible;
+    }
+
+    .carousel-container {
+        overflow-x: auto;
+        scroll-snap-type: x mandatory;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+        padding: 0 var(--spacing-md);
+    }
+
+    .carousel-container::-webkit-scrollbar {
+        display: none;
     }
 
     .carousel-track .product-card {
         flex: 0 0 calc(50% - var(--spacing-md) / 2);
-        min-width: 160px;
+        min-width: 180px;
+        max-width: 220px;
+        scroll-snap-align: start;
     }
 
     .carousel-btn {
         width: 36px;
         height: 36px;
         font-size: 1rem;
+    }
+
+    /* Badges mieux positionnés */
+    .product-badge {
+        font-size: 0.7rem;
+        padding: 3px 8px;
+    }
+
+    /* Nom produit lisible */
+    .product-name {
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
     }
 
     /* Hero */
@@ -422,6 +418,117 @@
     .quantity-input {
         width: 45px;
         height: 35px;
+    }
+
+    /* ============================================
+       CARROUSEL MOBILE - Fix cartes coupées
+       ============================================ */
+    .product-carousel {
+        padding: 0;
+        overflow: visible;
+    }
+
+    .carousel-container {
+        overflow-x: auto;
+        overflow-y: hidden;
+        scroll-snap-type: x mandatory;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+        padding: 0 var(--spacing-md);
+    }
+
+    .carousel-container::-webkit-scrollbar {
+        display: none;
+    }
+
+    /* Masquer les flèches sur mobile - utiliser le swipe */
+    .carousel-btn {
+        display: none !important;
+    }
+
+    .carousel-track {
+        gap: var(--spacing-md);
+    }
+
+    /* Une carte visible à la fois, bien centrée */
+    .carousel-track .product-card {
+        flex: 0 0 80%;
+        min-width: unset;
+        max-width: 280px;
+        scroll-snap-align: center;
+        /* Annuler le style row pour les cartes du carrousel */
+        display: block;
+        flex-direction: column;
+    }
+
+    .carousel-track .product-card .product-image {
+        width: 100%;
+        height: auto;
+        aspect-ratio: 1;
+    }
+
+    .carousel-track .product-card .product-info {
+        display: block;
+    }
+
+    /* Badges bien visibles */
+    .carousel-track .product-badge {
+        font-size: 0.7rem;
+        padding: 3px 8px;
+        z-index: 5;
+    }
+
+    /* Nom du produit sur 2 lignes max */
+    .carousel-track .product-name {
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        min-height: 2.6em;
+        font-size: 0.95rem;
+    }
+
+    /* Bouton ajouter plus compact */
+    .carousel-track .product-actions {
+        flex-direction: column;
+    }
+
+    .carousel-track .product-actions .btn {
+        width: 100%;
+        justify-content: center;
+    }
+
+    /* Indicateurs tactiles plus gros */
+    .carousel-indicators {
+        gap: var(--spacing-xs);
+        padding: var(--spacing-sm) 0;
+    }
+
+    .carousel-indicator {
+        width: 10px;
+        height: 10px;
+        padding: 10px;
+        background: transparent;
+        position: relative;
+    }
+
+    .carousel-indicator::after {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: var(--border);
+        transition: all var(--transition-fast);
+    }
+
+    .carousel-indicator.active::after {
+        background: var(--primary-green);
+        width: 20px;
+        border-radius: 4px;
     }
 }
 

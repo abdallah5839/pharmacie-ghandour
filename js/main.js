@@ -9,10 +9,10 @@ const CONFIG = {
     phonePrefixes: ['+221', '77', '78', '76', '70', '75', '33'],
     storeInfo: {
         name: 'Pharmacie Ghandour',
-        address: 'Avenue Cheikh Anta Diop, Dakar, Sénégal',
-        phone: '+221 33 XXX XX XX',
+        address: 'Rue Huart, Dakar, Sénégal',
+        phone: '+221 33 821 68 20',
         email: 'contact@pharmacieghandour.sn',
-        hours: 'Lun-Sam: 8h-22h | Dim: 9h-13h'
+        hours: 'Lun-Ven: 08:30-19:30 | Sam: 08:30-13:00 | Dim: Fermé'
     }
 };
 
@@ -21,15 +21,30 @@ const AppState = {
     menuOpen: false,
     searchOpen: false,
     products: [],
-    categories: []
+    categories: [],
+    dataSource: null
 };
 
 // Initialisation au chargement du DOM
 document.addEventListener('DOMContentLoaded', function() {
+    console.log('========================================');
+    console.log('📱 MAIN.JS - DOMCONTENTLOADED');
+    console.log('========================================');
+    console.log('URL:', window.location.href);
+
+    console.log('1️⃣ initNavigation()...');
     initNavigation();
+
+    console.log('2️⃣ initSearch()...');
     initSearch();
+
+    console.log('3️⃣ initCartIcon()...');
     initCartIcon();
+
+    console.log('4️⃣ loadProducts()...');
     loadProducts();
+
+    console.log('📱 MAIN.JS - Init terminée, attente chargement async...');
 });
 
 /* ============================================
@@ -223,14 +238,22 @@ function initCartIcon() {
 }
 
 function updateCartCount() {
-    const cartCount = document.querySelector('.cart-count');
-    if (!cartCount) return;
-
     const cart = getCart();
     const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
 
-    cartCount.textContent = totalItems;
-    cartCount.classList.toggle('hidden', totalItems === 0);
+    // Mettre à jour le badge du header
+    const cartCount = document.querySelector('.cart-count');
+    if (cartCount) {
+        cartCount.textContent = totalItems;
+        cartCount.classList.toggle('hidden', totalItems === 0);
+    }
+
+    // Mettre à jour le badge de la bottom nav
+    const bottomCartCount = document.getElementById('bottom-cart-count');
+    if (bottomCartCount) {
+        bottomCartCount.textContent = totalItems;
+        bottomCartCount.classList.toggle('hidden', totalItems === 0);
+    }
 }
 
 /* ============================================
@@ -239,14 +262,22 @@ function updateCartCount() {
 async function loadProducts() {
     console.log('🔄 Début du chargement des produits...');
 
+    // Timeout pour éviter le chargement infini (10 secondes)
+    const timeoutPromise = (ms) => new Promise((_, reject) =>
+        setTimeout(() => reject(new Error('Timeout: Sanity API trop lent')), ms)
+    );
+
     try {
         // Essayer de charger depuis Sanity d'abord
         if (window.SanityClient) {
             console.log('🔄 Chargement depuis Sanity CMS...');
 
-            const [sanityProducts, sanityCategories] = await Promise.all([
-                window.SanityClient.getProducts(),
-                window.SanityClient.getCategories()
+            const [sanityProducts, sanityCategories] = await Promise.race([
+                Promise.all([
+                    window.SanityClient.getProducts(),
+                    window.SanityClient.getCategories()
+                ]),
+                timeoutPromise(10000) // 10 secondes max
             ]);
 
             console.log('📦 Sanity - Produits:', sanityProducts?.length || 0);
@@ -269,11 +300,14 @@ async function loadProducts() {
                     }
                 }));
                 return;
+            } else {
+                console.warn('⚠️ Sanity a retourné 0 produits, fallback sur JSON');
             }
+        } else {
+            console.warn('⚠️ SanityClient non disponible, fallback sur JSON');
         }
 
         // Fallback: charger depuis le fichier JSON local
-        console.warn('⚠️ Fallback sur JSON local...');
         await loadProductsFromJSON();
 
     } catch (error) {
@@ -285,8 +319,9 @@ async function loadProducts() {
 
 async function loadProductsFromJSON() {
     try {
+        console.log('🔄 Chargement depuis JSON local...');
         const response = await fetch('data/products.json');
-        if (!response.ok) throw new Error('Erreur de chargement JSON');
+        if (!response.ok) throw new Error('Erreur de chargement JSON: ' + response.status);
 
         const data = await response.json();
         AppState.products = data.products || [];
@@ -294,6 +329,8 @@ async function loadProductsFromJSON() {
         AppState.dataSource = 'json';
 
         console.log('📁 Données chargées depuis JSON local');
+        console.log('📦 Produits:', AppState.products.length);
+        console.log('📁 Catégories:', AppState.categories.length);
 
         document.dispatchEvent(new CustomEvent('productsLoaded', {
             detail: {
@@ -302,10 +339,22 @@ async function loadProductsFromJSON() {
                 source: 'json'
             }
         }));
+        console.log('✅ Événement productsLoaded déclenché (JSON)');
     } catch (error) {
         console.error('❌ Impossible de charger les produits:', error);
         AppState.products = [];
         AppState.categories = [];
+
+        // Déclencher l'événement même en cas d'erreur pour débloquer l'UI
+        document.dispatchEvent(new CustomEvent('productsLoaded', {
+            detail: {
+                products: [],
+                categories: [],
+                source: 'error',
+                error: error.message
+            }
+        }));
+        console.log('⚠️ Événement productsLoaded déclenché (avec erreur)');
     }
 }
 
@@ -318,7 +367,21 @@ function getCategories() {
 }
 
 function getProductById(id) {
-    return AppState.products.find(p => p.id === id);
+    if (!id) return null;
+
+    // Recherche exacte d'abord
+    let product = AppState.products.find(p => p.id === id);
+
+    // Si pas trouvé, essayer des correspondances alternatives
+    if (!product) {
+        product = AppState.products.find(p =>
+            p.id === `product-${id}` ||
+            (p.id && p.id.includes(id)) ||
+            (id && id.includes(p.id))
+        );
+    }
+
+    return product;
 }
 
 function getProductsByCategory(categoryId) {
@@ -333,6 +396,11 @@ function getPopularProducts() {
    Utilitaires
    ============================================ */
 function formatPrice(price) {
+    // Gestion des prix invalides
+    if (price === null || price === undefined || isNaN(price)) {
+        console.warn('⚠️ Prix invalide:', price);
+        return '-- ' + CONFIG.currency;
+    }
     return new Intl.NumberFormat('fr-FR').format(price) + ' ' + CONFIG.currency;
 }
 

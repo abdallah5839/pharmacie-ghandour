@@ -9,8 +9,12 @@ Thumbs.db
 # Claude Code local settings
 .claude/
 
-# Node (if used later)
+# Node
 node_modules/
+
+# Sanity Studio build
+sanity-studio/dist/
+sanity-studio/.sanity/
 
 # Logs
 *.log

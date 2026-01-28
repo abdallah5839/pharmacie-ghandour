@@ -6,8 +6,14 @@
 const CAROUSEL_CONFIG = {
     autoScrollDelay: 4000,  // Délai entre chaque scroll automatique (ms)
     itemsPerView: 4,        // Nombre d'items visibles (desktop)
-    transitionDuration: 500  // Durée de la transition (ms)
+    transitionDuration: 500, // Durée de la transition (ms)
+    mobileBreakpoint: 480   // Seuil pour le mode mobile
 };
+
+// Détecter si on est sur mobile
+function isMobileView() {
+    return window.innerWidth <= CAROUSEL_CONFIG.mobileBreakpoint;
+}
 
 // Initialisation au chargement
 document.addEventListener('DOMContentLoaded', function() {
@@ -84,12 +90,12 @@ function loadCategoriesDropdown() {
 
         dropdown.innerHTML = `
             <a href="categorie.html">
-                <span class="icon">🏪</span>
+                <span class="icon"><svg viewBox="0 0 24 24"><path d="m7.5 4.27 9 5.15"/><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/><path d="m3.3 7 8.7 5 8.7-5"/><path d="M12 22V12"/></svg></span>
                 <span>Tous les produits</span>
             </a>
             ${categories.map(cat => `
                 <a href="categorie.html?cat=${cat.id}">
-                    <span class="icon">${cat.icon}</span>
+                    <span class="icon">${window.PharmacieIcons.getCategoryIcon(cat.id)}</span>
                     <span>${window.PharmacieApp.escapeHtml(cat.nom)}</span>
                 </a>
             `).join('')}
@@ -149,12 +155,25 @@ function initCarousel(carouselId, products) {
     track.innerHTML = products.map(product => createCarouselCard(product)).join('');
 
     // Attacher les événements d'ajout au panier
-    track.querySelectorAll('.add-to-cart-btn').forEach(btn => {
+    const cartButtons = track.querySelectorAll('.add-to-cart-btn');
+    console.log('🎠 Carousel: Attachement événements sur', cartButtons.length, 'boutons');
+
+    cartButtons.forEach((btn, index) => {
+        const productId = btn.dataset.productId;
+        console.log(`   - Bouton carousel ${index + 1}: ID="${productId}"`);
+
         btn.addEventListener('click', function(e) {
             e.preventDefault();
-            const productId = this.dataset.productId;
+            e.stopPropagation();
+            console.log('🖱️ CLIC carousel - Ajouter au panier!');
+            console.log('   - ProductId:', this.dataset.productId);
+            console.log('   - window.addToCart existe?', typeof window.addToCart);
+
             if (window.addToCart) {
-                window.addToCart(productId, 1);
+                window.addToCart(this.dataset.productId, 1);
+            } else {
+                console.error('❌ window.addToCart n\'existe pas!');
+                alert('Erreur: fonction addToCart non trouvée');
             }
         });
     });
@@ -181,10 +200,21 @@ function initCarousel(carouselId, products) {
     function updateCarousel() {
         const cards = track.querySelectorAll('.product-card');
         const cardWidth = cards[0]?.offsetWidth || 250;
-        const gap = 24; // var(--spacing-lg)
-        const offset = state.currentIndex * (cardWidth + gap);
+        const gap = isMobileView() ? 16 : 24; // var(--spacing-md) ou var(--spacing-lg)
 
-        track.style.transform = `translateX(-${offset}px)`;
+        if (isMobileView()) {
+            // Sur mobile: utiliser le scroll natif
+            const container = carousel.querySelector('.carousel-container');
+            const scrollPosition = state.currentIndex * (cardWidth + gap);
+            container.scrollTo({
+                left: scrollPosition,
+                behavior: 'smooth'
+            });
+        } else {
+            // Sur desktop: utiliser transform
+            const offset = state.currentIndex * (cardWidth + gap);
+            track.style.transform = `translateX(-${offset}px)`;
+        }
 
         // Mettre à jour les boutons
         prevBtn.disabled = state.currentIndex === 0;
@@ -195,6 +225,30 @@ function initCarousel(carouselId, products) {
         indicatorsContainer.querySelectorAll('.carousel-indicator').forEach((ind, i) => {
             ind.classList.toggle('active', i === activeIndicatorIndex);
         });
+    }
+
+    // Observer le scroll natif sur mobile pour mettre à jour les indicateurs
+    if (isMobileView()) {
+        const container = carousel.querySelector('.carousel-container');
+        let scrollTimeout;
+        container.addEventListener('scroll', () => {
+            clearTimeout(scrollTimeout);
+            scrollTimeout = setTimeout(() => {
+                const cards = track.querySelectorAll('.product-card');
+                const cardWidth = cards[0]?.offsetWidth || 250;
+                const gap = 16;
+                const scrollLeft = container.scrollLeft;
+                const newIndex = Math.round(scrollLeft / (cardWidth + gap));
+                if (newIndex !== state.currentIndex) {
+                    state.currentIndex = newIndex;
+                    // Mettre à jour les indicateurs
+                    const activeIndicatorIndex = Math.floor(state.currentIndex / state.itemsPerView);
+                    indicatorsContainer.querySelectorAll('.carousel-indicator').forEach((ind, i) => {
+                        ind.classList.toggle('active', i === activeIndicatorIndex);
+                    });
+                }
+            }, 100);
+        }, { passive: true });
     }
 
     // Navigation précédent
@@ -215,8 +269,11 @@ function initCarousel(carouselId, products) {
         }
     });
 
-    // Auto-scroll
+    // Auto-scroll (désactivé sur mobile pour laisser l'utilisateur swiper)
     function startAutoScroll() {
+        // Pas d'auto-scroll sur mobile
+        if (isMobileView()) return;
+
         if (state.autoScrollInterval) clearInterval(state.autoScrollInterval);
 
         state.autoScrollInterval = setInterval(() => {
@@ -330,7 +387,7 @@ function createCarouselCard(product) {
                     <button class="btn btn-primary btn-sm add-to-cart-btn"
                             data-product-id="${product.id}"
                             ${!product.enStock ? 'disabled' : ''}>
-                        ${product.enStock ? '🛒 Ajouter' : 'Indisponible'}
+                        ${product.enStock ? '<span class="icon icon-sm"><svg viewBox="0 0 24 24"><circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/></svg></span> Ajouter' : 'Indisponible'}
                     </button>
                 </div>
             </div>
